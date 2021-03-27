@@ -3,18 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-concrete-optimization-fleet/data
-cost-routes-control/data
-sales-agent/data
-tires-optimizer/data
-predictive-maintenance/data
-
-
 # C extensions
 *.so
 
 # package yaml
-
 packaged.yaml
 # Distribution / packaging
 .Python
@@ -53,7 +45,6 @@ htmlcov/
 .nox/
 .coverage
 .coverage.*
-A
 .cache
 nosetests.xml
 coverage.xml
@@ -64,10 +55,12 @@ coverage.xml
 
 # Translations
 *.mo
-A
 *.pot
 
-
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
@@ -141,7 +134,6 @@ dmypy.json
 config.ini
 
 # DatasetFiles
-*.csv
 *.pkl
 *.xlsx
 *.parquet
@@ -150,7 +142,9 @@ config.ini
 # AWS
 .aws-sam
 
-# Models
+# png
 
+
+# Models
 *.h5
 *.save
