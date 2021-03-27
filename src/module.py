@@ -79,7 +79,7 @@ def plot_prob_forecasts(ts_entry, forecast_entry, prediction_lentgh,
     plt.show()
     try_create_folder(path="images")
     problem = problem + "_" + str(ts_entry.columns[0])
-    fig.savefig(f"images/{problem}.png", dpi=200)
+    fig.savefig(f"images/{problem}.png")
 
 
 def try_create_folder(path="images"):
