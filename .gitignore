@@ -35,8 +35,14 @@ MANIFEST
 *.manifest
 *.spec
 
+# carpetas que no quiero agregar
 data/*.txt
 data/*.csv
+
+# resultados de los modelos
+results/energy-model
+results/manufacturing-model
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
