@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -29,7 +30,7 @@ def plot_time_series(df, fecha_inicial="2014-12-01",
     -------
     Gráficos en una sola plana
     """
-    fig, axs = plt.subplots(10, 4, figsize=(40, 40), sharex=True)
+    fig, axs = plt.subplots(5, 4, figsize=(40, 40), sharex=True)
     axx = axs.ravel()
     for i in range(0, sample):
         df[df.columns[i]].loc[fecha_inicial:fecha_final].plot(ax=axx[i])
@@ -41,7 +42,8 @@ def plot_time_series(df, fecha_inicial="2014-12-01",
 
 def plot_prob_forecasts(ts_entry, forecast_entry, prediction_lentgh,
                         prediction_intervals=(80.0, 95.0),
-                        problem="caso_electricidad"):
+                        problem="caso_electricidad",
+                        color="k"):
     """
     Plot del conjunto de testeo con intervalos de confianza definidos
 
@@ -68,7 +70,7 @@ def plot_prob_forecasts(ts_entry, forecast_entry, prediction_lentgh,
     fig, ax = plt.subplots(1, 1, figsize=(20, 14))
     ts_entry[-plot_length:].plot(ax=ax, color='red')
     forecast_entry.plot(prediction_intervals=prediction_intervals,
-                        color='k')
+                        color=color)
     plt.grid(which="both")
     plt.legend(legend, loc="upper left", fontsize=22)
     ax.set_ylabel("Observaciones", fontsize=25)
@@ -92,3 +94,96 @@ def try_create_folder(path="images"):
         os.mkdir(path)
     except Exception as e:
         pass
+
+
+def extract_base(string):
+    """
+    Extrer la base del sku
+    Parameters
+    ----------
+    string : string
+        skus.
+    Returns
+    -------
+    base : TYPE
+        DESCRIPTION.
+    """
+    ind = string.find("|")
+    base = string[0: ind]
+    return base
+
+
+def drop_spaces_data(df):
+    """
+    sacar los espacios de columnas que podrián venir interferidas
+    Parameters
+    ----------
+    df : dataframe
+        input data
+    column : string
+        string sin espacios en sus columnas
+    Returns
+    -------
+    """
+    for column in df.columns:
+        try:
+            df[column] = df[column].str.lstrip()
+            df[column] = df[column].str.rstrip()
+        except Exception as e:
+            print(e)
+            pass
+    return df
+
+
+def make_empty_identifiable(value):
+    """
+    Parameters
+    ----------
+    value : int, string, etc
+        valor con el que se trabaja.
+    Returns
+    -------
+    nans en los vacios.
+    """
+    if value == "":
+        output = np.nan
+    else:
+        output = value
+    return output
+
+
+def replace_empty_nans(df):
+    """
+    Parameters
+    ----------
+    df : int, string, etc
+        valor con el que se trabaja.
+    Returns
+    -------
+    nans en los vacios.
+    """
+    for col in df.columns:
+        print("buscando vacios en:", col, "...")
+        df[col] = df[col].apply(lambda x: make_empty_identifiable(x))
+    return df
+
+
+def df_convert_float(df):
+    """
+    Pasa por las columnas tratando de convertirlas a float64
+    Parameters
+    ----------
+    df : dataframe
+        df de trabajo.
+    Returns
+    -------
+    df : dataframe
+        df con las columnas númericas en float.
+    """
+    for col in df.columns:
+        try:
+            df[col] = df[col].apply(float)
+        except Exception as e:
+            print(e)
+    df.reset_index(drop=True, inplace=True)
+    return df
