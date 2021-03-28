@@ -46,56 +46,8 @@ tree del proyecto
 │       paper-amazon-deepAR.pdf ---> paper de deep autoregresive neural networks
 │       paper-gluontsTS.pdf ---> paper de la implementación en gluonts
 ├───images  ---> resultados para los difererentes casos
-│       caso_electricidad_DP30 PIN.png
-│       caso_electricidad_DP30.png
-│       caso_electricidad_DP60 PIN.png
-│       caso_electricidad_DQ60-S.png
-│       caso_electricidad_DQ60.png
-│       caso_electricidad_IP41 LLAVE LAGRIMA.png
-│       caso_electricidad_MP60-S.png
-│       caso_electricidad_MP60.png
-│       caso_electricidad_MT_001.png
-│       caso_electricidad_MT_002.png
-│       caso_electricidad_MT_003.png
-│       caso_electricidad_MT_004.png
-│       caso_electricidad_MT_005.png
-│       caso_electricidad_MT_006.png
-│       caso_electricidad_MT_007.png
-│       caso_electricidad_MT_008.png
-│       caso_electricidad_MT_009.png
-│       caso_electricidad_MT_010.png
-│       caso_electricidad_MT_011.png
-│       caso_electricidad_MT_012.png
-│       caso_electricidad_MT_013.png
-│       caso_electricidad_MT_014.png
-│       caso_electricidad_SP40 TU.png
-│       caso_electricidad_SP40.png
-│       caso_electricidad_SP60-S.png
-│       caso_electricidad_SP60.png
-│       caso_electricidad_YPH48.png
-│       caso_electricidad_ZAPT44.png
-│       caso_electricidad_ZAT48.png
-│       caso_electricidad_ZIPP30.png
-│       caso_electricidad_ZIPP44.png
-│       caso_electricidad_ZP48.png
-│       caso_manufactura_DP30 PIN.png
-│       caso_manufactura_DP30.png
-│       caso_manufactura_DP60 PIN.png
-│       caso_manufactura_DQ60-S.png
-│       caso_manufactura_DQ60.png
-│       caso_manufactura_IP41 LLAVE LAGRIMA.png
-│       caso_manufactura_MP60-S.png
-│       caso_manufactura_MP60.png
-│       caso_manufactura_SP40 TU.png
-│       caso_manufactura_SP40.png
-│       caso_manufactura_SP60-S.png
-│       caso_manufactura_SP60.png
-│       caso_manufactura_YPH48.png
-│       caso_manufactura_ZAPT44.png
-│       caso_manufactura_ZAT48.png
-│       caso_manufactura_ZIPP30.png
-│       caso_manufactura_ZIPP44.png
-│       caso_manufactura_ZP48.png
+│       caso_electricidad_{nombre}.png
+│       caso_manufactura_{nombre}.png
 ├───results  ---> resultados para los difererentes casos
 │   │   resultados_energia.csv  
 │   │   resultados_manufactura.csv
