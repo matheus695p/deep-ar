@@ -68,7 +68,7 @@ estimator = DeepAREstimator(freq=freq,
                             num_layers=4,
                             num_cells=64,
                             cell_type='lstm',
-                            trainer=Trainer(epochs=15))
+                            trainer=Trainer(epochs=100))
 # reshape de la data de entrenamiento para solo ocupar number_of_products
 train_ds = ListDataset([{
     FieldName.TARGET: target,

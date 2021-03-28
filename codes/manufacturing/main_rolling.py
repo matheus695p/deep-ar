@@ -20,8 +20,17 @@ mpl.rcParams['axes.grid'] = False
 
 # lectura de los datos en .txt
 df = pd.read_csv('data/manufacturing_r30.csv', parse_dates=True)
+
+# fechas inicial y final
 fecha_inicial = df["fecha"].iloc[0][0: 10]
 fecha_final = df["fecha"].iloc[-1][0: 10]
+
+# separar los datos
+test_index = int(len(df) * 0.8)
+# start_date
+start_date = df["fecha"].iloc[0][0: 10]
+end_date = df["fecha"].iloc[test_index][0: 10]
+
 print("Fecha inicial del historial de ventas: ", fecha_inicial)
 print("Fecha final del historial de ventas: ", fecha_final)
 # convertir fecha a timestamp
@@ -42,14 +51,12 @@ df_input = df.reset_index(drop=True).T.reset_index()
 # indice de los lugares de consumo electrico
 ts_code = df_input["index"].astype('category').cat.codes.values
 
-# separar los datos
-test_index = int(len(df) * 0.8)
+
 # test_index = 134999
 df_train = df_input.iloc[:, 1:test_index].values
 df_test = df_input.iloc[:, test_index:].values
 print("foma de conjunto entrenamiento", df_train.shape)
 print("foma de conjunto test", df_test.shape)
-
 
 # frecuencia de los timestamps para pandas en minutos
 freq = "1440min"
@@ -63,19 +70,19 @@ prediction_lentgh = int(days_of_prediction * 24 * freq_int)
 number_of_products = 19
 
 # fechas de inicio de los conjuntos
-start_train = pd.Timestamp(fecha_inicial + " 00:00:00", freq=freq)
-start_test = pd.Timestamp(fecha_final + " 00:00:00", freq=freq)
+start_train = pd.Timestamp(start_date + " 00:00:00", freq=freq)
+start_test = pd.Timestamp(end_date + " 00:00:00", freq=freq)
 
-# estimador
+# estimador https://ts.gluon.ai/api/gluonts/gluonts.model.deepar.html
 estimator = DeepAREstimator(freq=freq,
-                            context_length=prediction_lentgh,
                             prediction_length=prediction_lentgh,
                             use_feat_static_cat=True,
                             cardinality=[1],
                             num_layers=4,
+                            dropout_rate=0.3,
                             num_cells=64,
                             cell_type='lstm',
-                            trainer=Trainer(epochs=350))
+                            trainer=Trainer(epochs=10))
 
 # reshape de la data de entrenamiento para solo ocupar number_of_products
 train_ds = ListDataset([{
@@ -101,7 +108,7 @@ predictor = estimator.train(training_data=train_ds)
 forecast_it, ts_it = make_evaluation_predictions(
     dataset=test_ds,
     predictor=predictor,
-    num_samples=100)
+    num_samples=df_test.shape[1])
 
 print("Obtención de valores de acondicionamiento de series de tiempo ...")
 tss = list(tqdm(ts_it, total=len(df_test)))
