@@ -111,5 +111,34 @@ Voy a interpretar este resultado utilizando el valor p de la prueba. Un valor p 
 * Valor p> 0.05: No se rechaza la hipótesis nula (H0), los datos no son estacionarios
 * Valor de p <= 0.05: Rechaza la hipótesis nula (H0), los datos son estacionarios
 
+Los resultados se pueden ver en results/stationary_test_manufacturing, acá un ejemplo de los 3 primeros
+
+```sh
+Para la columna:  SP40
+Rechaza la hipótesis nula (H0), los datos son estacionarios
+ADF estadisticas: -6.757590
+Valor de p: 0.000000
+Valores criticos:
+	1%: -3.436
+	5%: -2.864
+	10%: -2.568
+Para la columna:  SP60-S
+Rechaza la hipótesis nula (H0), los datos son estacionarios
+ADF estadisticas: -5.848840
+Valor de p: 0.000000
+Valores criticos:
+	1%: -3.436
+	5%: -2.864
+	10%: -2.568
+Para la columna:  MP60-S
+Rechaza la hipótesis nula (H0), los datos son estacionarios
+ADF estadisticas: -5.881735
+Valor de p: 0.000000
+Valores criticos:
+	1%: -3.436
+	5%: -2.864
+	10%: -2.568
+```
+
 
 
