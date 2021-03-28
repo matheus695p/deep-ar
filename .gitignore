@@ -44,7 +44,7 @@ results/energy-model
 results/manufacturing-model
 
 # modulos de shiphns
-build/
+
 source/
 
 .gitignore.swp
