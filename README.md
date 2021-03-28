@@ -111,8 +111,7 @@ Voy a interpretar este resultado utilizando el valor p de la prueba. Un valor p 
 * Valor p> 0.05: No se rechaza la hipótesis nula (H0), los datos no son estacionarios
 * Valor de p <= 0.05: Rechaza la hipótesis nula (H0), los datos son estacionarios
 
-Los resultados se pueden ver en results/stationary_test_manufacturing, acá un ejemplo de los 3 primeros
-
+Los resultados se pueden ver en results/stationary_test_manufacturing, acá un ejemplo de los 3 primeros, las series de tiempo trabajadas son estacionarias
 ```sh
 Para la columna:  SP40
 Rechaza la hipótesis nula (H0), los datos son estacionarios
