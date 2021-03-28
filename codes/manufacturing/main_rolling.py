@@ -12,32 +12,29 @@ from gluonts.dataset.field_names import FieldName
 from gluonts.evaluation.backtest import make_evaluation_predictions
 from gluonts.model.predictor import Predictor
 from src.module import (plot_time_series, plot_prob_forecasts,
-                        try_create_folder)
+                        try_create_folder, index_date)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 # seteo de matplotlib
 mpl.rcParams['figure.figsize'] = (20, 12)
 mpl.rcParams['axes.grid'] = False
 
 # lectura de los datos en .txt
-df = pd.read_csv('data/manufacturing.csv', parse_dates=True)
+df = pd.read_csv('data/manufacturing_r30.csv', parse_dates=True)
 fecha_inicial = df["fecha"].iloc[0][0: 10]
 fecha_final = df["fecha"].iloc[-1][0: 10]
 print("Fecha inicial del historial de ventas: ", fecha_inicial)
 print("Fecha final del historial de ventas: ", fecha_final)
-
+# convertir fecha a timestamp
 df["fecha"] = df["fecha"].apply(
     lambda x: datetime.strptime(x, "%Y-%m-%d %H-%M-%S"))
-df.rename(columns={"fecha": "index"}, inplace=True)
-df.set_index(["index"], inplace=True)
-
+# indexar fecha
+df = index_date(df)
 
 # plot de las cantidades vendidas
 plot_time_series(df, fecha_inicial="2019-03-12", fecha_final="2020-03-12",
                  title="Unidades Vendidas",
                  ylabel="Unidades vendidas [u]",
                  sample=19)
-
-# solo viendolo desde el plot, esta más duro que maradona la predicción
 
 # poner en el formato que requiere gluonts
 df_input = df.reset_index(drop=True).T.reset_index()
@@ -75,10 +72,10 @@ estimator = DeepAREstimator(freq=freq,
                             prediction_length=prediction_lentgh,
                             use_feat_static_cat=True,
                             cardinality=[1],
-                            num_layers=1,
-                            num_cells=128,
+                            num_layers=4,
+                            num_cells=64,
                             cell_type='lstm',
-                            trainer=Trainer(epochs=45))
+                            trainer=Trainer(epochs=350))
 
 # reshape de la data de entrenamiento para solo ocupar number_of_products
 train_ds = ListDataset([{
@@ -118,7 +115,7 @@ for i in tqdm(range(number_of_products - 1)):
     forecast_entry = forecasts[i]
     plot_prob_forecasts(ts_entry, forecast_entry, prediction_lentgh,
                         prediction_intervals=(80.0, 95.0),
-                        problem="caso_manufactura", color="orange")
+                        problem="caso_manufactura_rolling", color="b")
 
 # evaluar para los cuantiles
 evaluator = Evaluator(quantiles=[0.1, 0.5, 0.9])
@@ -136,11 +133,12 @@ print(item_metrics)
 # guardar parámetros
 path = "results/"
 try_create_folder(path)
-path = path + "manufacturing-model"
+path = path + "manufacturing-rolling-model"
 try_create_folder(path)
 
 # guardar los resultados
-item_metrics.to_csv("results/resultados_manufactura.csv", index=False)
+item_metrics.to_csv(
+    "results/resultados_manufactura_rolling.csv", index=False)
 
 # guardar el modelo
 predictor.serialize(Path(path))
