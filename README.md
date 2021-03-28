@@ -82,7 +82,6 @@ Los scripts utilizados para hacer las pruebas se pueden encontrar en
 │           main.py   ---> códicos para hacer predicción de demanda de skus, caso de manufactura
 │           transformations.py   ---> códicos para transformación al formato de datos de gluonts
 │           stationary_tests.py   ---> códicos para verificar estacionaridad de las series de tiempo
-│           make_stationary.py   ---> códicos para hacer estacionarias las series de tiempo
 ```
 
 
