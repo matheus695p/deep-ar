@@ -1,4 +1,5 @@
 # Byte-compiled / optimized / DLL files
+B
 __pycache__/
 *.py[cod]
 *$py.class
@@ -10,8 +11,9 @@ __pycache__/
 packaged.yaml
 # Distribution / packaging
 .Python
-build/
+
 develop-eggs/
+A
 dist/
 downloads/
 eggs/
@@ -52,6 +54,7 @@ make.bat
 Makefile
 
 
+# Asdas
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -123,6 +126,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+B
 env/
 venv/
 ENV/

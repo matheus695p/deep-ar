@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src package &mdash; documentación de Deep AR manufacturing test - 0.1.0</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Deep AR manufacturing test
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">src package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-src.module">src.module module</a></li>
+<li><a class="reference internal" href="#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Deep AR manufacturing test</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>src package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="src-package">
+<h1>src package<a class="headerlink" href="#src-package" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="module-src.module">
+<span id="src-module-module"></span><h2>src.module module<a class="headerlink" href="#module-src.module" title="Enlazar permanentemente con este título">¶</a></h2>
+<dl class="py function">
+<dt id="src.module.df_convert_float">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">df_convert_float</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.df_convert_float" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Pasa por las columnas tratando de convertirlas a float64
+:param df: df de trabajo.
+:type df: dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p><strong>df</strong> – df con las columnas númericas en float.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.drop_spaces_data">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">drop_spaces_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.drop_spaces_data" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>sacar los espacios de columnas que podrián venir interferidas
+:param df: input data
+:type df: dataframe
+:param column: string sin espacios en sus columnas
+:type column: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.extract_base">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">extract_base</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.extract_base" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Extrer la base del sku
+:param string: skus.
+:type string: string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p><strong>base</strong> – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.make_empty_identifiable">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">make_empty_identifiable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.make_empty_identifiable" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em>, </em><em>string</em><em>, </em><em>etc</em>) – valor con el que se trabaja.</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>nans en los vacios.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.plot_prob_forecasts">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">plot_prob_forecasts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts_entry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_entry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_lentgh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_intervals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(80.0,</span> <span class="pre">95.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'caso_electricidad'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.plot_prob_forecasts" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Plot del conjunto de testeo con intervalos de confianza definidos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ts_entry</strong> (<em>dataframe</em>) – dataframe con fecha y cantidad consumida.</p></li>
+<li><p><strong>forecast_entry</strong> (<em>TYPE</em>) – DESCRIPTION.</p></li>
+<li><p><strong>prediction_lentgh</strong> (<em>TYPE</em>) – DESCRIPTION.</p></li>
+<li><p><strong>prediction_intervals</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is (80.0, 95.0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.plot_time_series">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">plot_time_series</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fecha_inicial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2014-12-01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fecha_final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2014-12-14'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Consumo</span> <span class="pre">Electrico'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Consumo</span> <span class="pre">Electrico</span> <span class="pre">[kW]'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.plot_time_series" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Plot de la serie de tiempo que tiene como indice la fehca en formato
+timestamp</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>dataframe</em>) – datos de las series de tiempo ordenados hacia el lado.</p></li>
+<li><p><strong>fecha_inicial</strong> (<em>str</em>) – fecha inicial en el formato %y-%m-%d. The default is «2014-12-01».</p></li>
+<li><p><strong>fecha_final</strong> (<em>TYPE</em>) – fecha final en el formato %y-%m-%d. The default is «2014-12-14».</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – titulo. The default is «Consumo Electrico».</p></li>
+<li><p><strong>ylabel</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – nombre de eje Y. The default is «Consumo Electrico [kW]».</p></li>
+<li><p><strong>sample</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – cuantas columans quieres tomar. The default is 10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>Gráficos en una sola plana</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.replace_empty_nans">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">replace_empty_nans</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.replace_empty_nans" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>int</em><em>, </em><em>string</em><em>, </em><em>etc</em>) – valor con el que se trabaja.</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>nans en los vacios.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.module.try_create_folder">
+<code class="sig-prename descclassname"><span class="pre">src.module.</span></code><code class="sig-name descname"><span class="pre">try_create_folder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'images'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.module.try_create_folder" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Intentar crear carpeta
+:param path: direccion.
+:type path: string</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Derechos de autor 2021, Matheus.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
