@@ -43,6 +43,15 @@ data/*.csv
 results/energy-model
 results/manufacturing-model
 
+# modulos de shiphns
+build/
+source/
+
+.gitignore.swp
+make.bat
+Makefile
+
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
