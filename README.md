@@ -19,9 +19,10 @@ Ej: a través de anaconda, tiene que ser en ambiente con python=3.6
 $ conda create -n deepAR python=3.6 anaconda
 $ conda activate deepAR
 $ conda install pip
+$ pip install pytorchts==0.3.1
+$ echo en mi caso necesitaba install cudnn para correr en la GPU
+$ pip install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio===0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
 $ pip install pandas==1.0.5
-$ pip install --upgrade mxnet==1.6
-$ pip install gluonts
 ```
 
 
