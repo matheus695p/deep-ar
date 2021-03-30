@@ -193,12 +193,12 @@ Después de varías pruebas, se determinó que la frecuencia de predicción ser�
 Acá se muestran algunos resultados
 
 Ejemplo casos buenos:
-![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_DP30%20PIN.png)
-![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_IP41%20LLAVE%20LAGRIMA.png)
-![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_DP60%20PIN.png)
+![resultados de lstm](./images/caso_manufactura_rolling_rolling_DP30%20PIN.png)
+![resultados de lstm](./images/caso_manufactura_rolling_rolling_IP41%20LLAVE%20LAGRIMA.png)
+![resultados de lstm](./images/caso_manufactura_rolling_rolling_DP60%20PIN.png)
 
 Ejemplos de casos no tan buenos
-![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_ZAT48.png)
+![resultados de lstm](./images/caso_manufactura_rolling_rolling_ZAT48.png)
 
 
 
