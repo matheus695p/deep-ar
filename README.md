@@ -190,7 +190,16 @@ Estos resultados de lleno permiten hacer una mucho mejor planificación de la pr
 
 Después de varías pruebas, se determinó que la frecuencia de predicción sería de 14 días, es decir a partir de la última fecha en train, se predice 14 días al futuro, dos semanas, lo ideal es que se hagan predicciones cada 2 semanas, considerando los datos anteriores.
 
-Acá se muestran un 
+Acá se muestran algunos resultados
+
+Ejemplo casos buenos:
+![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_DP30%20PIN.png)
+![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_IP41%20LLAVE%20LAGRIMA.png)
+![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_DP60%20PIN.png)
+
+Ejemplos de casos no tan buenos
+![resultados de lstm](./results/lstm/caso_manufactura_rolling_rolling_ZAT48.png)
+
 
 
 
