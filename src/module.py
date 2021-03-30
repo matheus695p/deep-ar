@@ -371,10 +371,8 @@ def lstm_preparation(array, timesteps=30):
     x_train = []
     y_train = []
     for i in range(timesteps, array.shape[0]):
-        print(i)
         x_train.append(array[i-timesteps:i])
         y_train.append(array[i][0:array.shape[1]])
-
     x_train = np.array(x_train, dtype='float32')
     y_train = np.array(y_train, dtype='float32')
     return x_train, y_train
@@ -421,7 +419,7 @@ def delete_negatives(predictions):
     return predictions
 
 
-def lstm_metric_evaluation(predictions, y_test, fechas):
+def lstm_metric_evaluation(predictions, y_test, fechas, filter_names):
     """
     Evaluar la suma de la demanda predecida para el ciclo, con la suma de
     la demanda real en el ciclo de test
@@ -433,6 +431,8 @@ def lstm_metric_evaluation(predictions, y_test, fechas):
         testing.
     fechas : array
         array con las fechas de testing.
+    filter names : array
+        array con los nombres de los articulos.
     Returns
     -------
     mean : dataframe
@@ -443,7 +443,7 @@ def lstm_metric_evaluation(predictions, y_test, fechas):
         print("columna: ", i)
         predi = predictions[:, i]
         testi = y_test[:, i]
-        plot_sequence(predi, testi, fechas, i)
+        plot_sequence(predi, testi, fechas, filter_names[i])
         error = np.abs(predi - testi).mean()
         suma_pred = predi.sum()
         suma_test = testi.sum()
@@ -482,6 +482,24 @@ def calculate_accuracy(real, predict):
 
 def plot_instance_training(history, epocas_hacia_atras, model_name,
                            filename):
+    """
+    Sacar el historial de entrenamiento de epocas en partivular
+    Parameters
+    ----------
+    history : object
+        DESCRIPTION.
+    epocas_hacia_atras : int
+        epocas hacia atrás que queremos ver en el entrenamiento.
+    model_name : string
+        nombre del modelo.
+    filename : string
+        nombre del archivo.
+    Returns
+    -------
+    bool
+        gráficas de lo ocurrido durante el entrenamiento.
+    """
+    letter_size = 20
     # Hist training
     largo = len(history.history['loss'])
     x_labels = np.arange(largo-epocas_hacia_atras, largo)
@@ -493,20 +511,19 @@ def plot_instance_training(history, epocas_hacia_atras, model_name,
     fig, ax = plt.subplots(1, figsize=(16, 8))
     ax.plot(x_labels, loss_training, 'b', linewidth=2)
     ax.plot(x_labels, loss_validation, 'r', linewidth=2)
-    ax.set_xlabel('Epocas', fontname="Arial", fontsize=14)
-    ax.set_ylabel('Función de costos', fontname="Arial", fontsize=14)
-    ax.set_title(f"{model_name}", fontname="Arial", fontsize=20)
+    ax.set_xlabel('Epocas', fontname="Arial", fontsize=letter_size-5)
+    ax.set_ylabel('Función de costos', fontname="Arial",
+                  fontsize=letter_size-5)
+    ax.set_title(f"{model_name}", fontname="Arial", fontsize=letter_size)
     ax.legend(['Entrenamiento', 'Validación'], loc='upper left',
-              prop={'size': 14})
+              prop={'size': letter_size-5})
     # Tamaño de los ejes
     for tick in ax.get_xticklabels():
-        tick.set_fontsize(14)
+        tick.set_fontsize(letter_size-5)
     for tick in ax.get_yticklabels():
-        tick.set_fontsize(14)
+        tick.set_fontsize(letter_size-5)
     plt.show()
-    # Guardar_resultados del modelo en s3
-    # fig.savefig(f"{model_name}.png")
-    return True
+    return fig
 
 
 def training_history(history, model_name="Celdas LSTM", filename="LSTM"):
@@ -536,6 +553,8 @@ def training_history(history, model_name="Celdas LSTM", filename="LSTM"):
                                  model_name,
                                  filename + "_ultimas:" +
                                  str(1.5 * size_training / 2) + "epocas")
+    # guardar el resultado de entrenamiento de la lstm
+    fig.savefig(f"results/{model_name}_training.png")
 
     fig = plot_instance_training(history, int(size_training / 2),
                                  model_name,
@@ -556,32 +575,40 @@ def plot_sequence(predictions, real, fechas, indice):
     Plot sequence de la secuecnia
     Parameters
     ----------
-    predictions : TYPE
-        DESCRIPTION.
-    real : TYPE
-        DESCRIPTION.
-    fechas : TYPE
-        DESCRIPTION.
+    predictions : array
+        predicciones.
+    real : array
+        valores reales.
+    fechas : array
+        array de fechas.
     indice : TYPE
-        DESCRIPTION.
+        indice de la columna.
     Returns
     -------
-    None.
-
+    plot de prediciones vs real.
     """
+    letter_size = 20
+    new_fechas = []
+    for fecha in fechas:
+        fecha = fecha[0:10]
+        new_fechas.append(fecha)
+
     fig, ax = plt.subplots(1, figsize=(20, 12))
-    ax.plot(fechas, real, 'k', linewidth=2)
-    ax.plot(fechas, predictions, 'orange', linewidth=2)
-    ax.set_xlabel('Tiempo', fontname="Arial", fontsize=14)
-    ax.set_ylabel('Predicción vs Real', fontname="Arial", fontsize=14)
+    ax.plot(new_fechas, real, 'k', linewidth=2)
+    ax.plot(new_fechas, predictions, 'orangered', linewidth=2)
+    ax.set_xlabel('Tiempo', fontname="Arial", fontsize=letter_size)
+    ax.set_ylabel('Predicción vs Real', fontname="Arial",
+                  fontsize=letter_size+2)
     ax.set_title(f"Predicciones vs real {str(indice)}",
-                 fontname="Arial", fontsize=20)
-    ax.legend(['Entrenamiento', 'Validación'], loc='upper left',
-              prop={'size': 14})
+                 fontname="Arial", fontsize=letter_size+10)
+    ax.legend(['real', 'predicción'], loc='upper left',
+              prop={'size': letter_size+5})
     # Tamaño de los ejes
     for tick in ax.get_xticklabels():
-        tick.set_fontsize(14)
+        tick.set_fontsize(letter_size)
     for tick in ax.get_yticklabels():
-        tick.set_fontsize(14)
-    plt.xticks(rotation=90)
+        tick.set_fontsize(letter_size)
+    try_create_folder("results/lstm")
+    fig.savefig(f"results/lstm/{indice}_results.png")
+    plt.xticks(rotation=75)
     plt.show()
