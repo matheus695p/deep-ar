@@ -9,14 +9,14 @@ from src.module import (index_date, always_number, downcast_dtypes,
                         lstm_preparation, delete_negatives, training_history,
                         lstm_metric_evaluation)
 from sklearn.preprocessing import MinMaxScaler
-
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 # seteo de matplotlib
 mpl.rcParams['figure.figsize'] = (20, 12)
 mpl.rcParams['axes.grid'] = False
 
 # lectura de los datos en .txt
-df = pd.read_csv('data/manufacturing.csv', parse_dates=True)
+df = pd.read_csv('data/manufacturing_r30.csv', parse_dates=True)
 df.reset_index(drop=True, inplace=True)
 df = always_number(df)
 fecha_inicial = df["fecha"].iloc[0][0: 10]
@@ -47,6 +47,14 @@ df["fecha"] = df["fecha"].apply(
 df = index_date(df)
 # bajar IOPS
 df = downcast_dtypes(df)
+# nombres
+names = list(df.columns)
+# filter_names = []
+# for name in names:
+#     print(name)
+#     name = name.replace("rolling_", "")
+#     filter_names.append(name)
+
 # datos de training
 train_df = df.iloc[0: test_index]
 # datos de testing con timesteps hacia atrás
@@ -74,7 +82,7 @@ hyperparameters = {
     "batch_size": 20,
     "epochs": 500,
     "patience": 50,
-    "min_delta": 10e-3,
+    "min_delta": 10e-7,
     "optimizer": "adam",
     "lr_factor": 0.75,
     "lr_patience": 25,
@@ -101,13 +109,15 @@ validation_size = hyperparameters["validation_size"]
 
 # modelo
 lstm = tf.keras.Sequential()
-lstm.add(tf.keras.layers.LSTM(units=128,
+lstm.add(tf.keras.layers.LSTM(units=256,
                               input_shape=(
                                   np.array(x_train).shape[1],
                                   np.array(x_train).shape[2])))
-lstm.add(tf.keras.layers.Dense(x_train.shape[2]))
+lstm.add(tf.keras.layers.Dropout(0.2))
+lstm.add(tf.keras.layers.Dense(x_train.shape[2], activation="linear"))
 # arquitectura usada
 lstm.summary()
+
 # compilar
 lstm.compile(loss='mean_squared_error',
              optimizer=optimizer)
@@ -119,6 +129,7 @@ stop_condition = keras.callbacks.EarlyStopping(monitor='val_loss',
                                                verbose=1,
                                                min_delta=min_delta,
                                                restore_best_weights=True)
+
 # bajar el learning_rate durante la optimización
 learning_rate_schedule = keras.callbacks.ReduceLROnPlateau(
     monitor="val_loss",
@@ -128,6 +139,7 @@ learning_rate_schedule = keras.callbacks.ReduceLROnPlateau(
     mode="auto",
     cooldown=0,
     min_lr=lr_min)
+
 # cuales son los callbacks que se usaran
 callbacks = [stop_condition, learning_rate_schedule]
 # entrenar
@@ -149,6 +161,6 @@ y_test = sc.inverse_transform(y_test)
 # hacer predicciones siempre mayor a cero
 predictions = delete_negatives(predictions)
 
-
 # matriz de evaluación de la serie de tiempo
-evaluation = lstm_metric_evaluation(predictions, y_test, fechas)
+evaluation = lstm_metric_evaluation(
+    predictions, y_test, fechas, names)
