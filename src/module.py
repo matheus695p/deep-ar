@@ -329,3 +329,259 @@ def stationary_adf_test(df):
     output = pd.DataFrame(output, columns=["columna", "resultado",
                                            "valor_p", "intervalos"])
     return output
+
+
+def downcast_dtypes(df):
+    """
+    Función super util para bajar la cantidad de operaciones flotante que
+    se van a realizar en el proceso de entrenamiento de la red
+    Parameters
+    ----------
+    df : dataframe
+        df a disminuir la cantidad de operaciones flotantes.
+    Returns
+    -------
+    df : dataframe
+        dataframe con los tipos int16 y float32 como formato número
+    """
+    float_cols = [c for c in df if df[c].dtype == "float64"]
+    int_cols = [c for c in df if df[c].dtype in ["int64", "int32"]]
+    df[float_cols] = df[float_cols].astype(np.float32)
+    df[int_cols] = df[int_cols].astype(np.int16)
+    return df
+
+
+def lstm_preparation(array, timesteps=30):
+    """
+    Preparar los datos para la predicción con la lstm
+    Parameters
+    ----------
+    array : numpy.array
+        array.
+    timesteps : int, optional
+        cantidad de tiemsteps que se harán las predicciones.
+        The default is 30.
+    Returns
+    -------
+    x_train : array
+        matriz de entrenamiento de las celdas lstm.
+    y_train : array
+        salida de las celdas.
+    """
+    x_train = []
+    y_train = []
+    for i in range(timesteps, array.shape[0]):
+        print(i)
+        x_train.append(array[i-timesteps:i])
+        y_train.append(array[i][0:array.shape[1]])
+
+    x_train = np.array(x_train, dtype='float32')
+    y_train = np.array(y_train, dtype='float32')
+    return x_train, y_train
+
+
+def always_number(df):
+    """
+    Pasa por las columnas del dataframe poniendo valores > 0
+    Parameters
+    ----------
+    df : dataframe
+        df de trabajo.
+    Returns
+    -------
+    df : dataframe
+        df con las columnas númericas en float.
+    """
+    for col in df.columns:
+        try:
+            df[col] = df[col].apply(lambda x: 10e-20 if x == 0 else x)
+        except Exception as e:
+            print(e)
+    df.reset_index(drop=True, inplace=True)
+    return df
+
+
+def delete_negatives(predictions):
+    """
+    No pueden haber predicciones negativas, asi que nos aseguramos de eso
+    Parameters
+    ----------
+    predictions : array
+        predicciones para todos los sku.
+    Returns
+    -------
+    predictions : array
+        predicciones con 0 en los casos en que estás eran negativas.
+    """
+    predictions = pd.DataFrame(predictions)
+    for col in predictions.columns:
+        predictions[col] = predictions[col].apply(
+            lambda x: 0 if x < 0 else x)
+    predictions = predictions.to_numpy()
+    return predictions
+
+
+def lstm_metric_evaluation(predictions, y_test, fechas):
+    """
+    Evaluar la suma de la demanda predecida para el ciclo, con la suma de
+    la demanda real en el ciclo de test
+    Parameters
+    ----------
+    predictions : array
+        predicciones.
+    y_test : array
+        testing.
+    fechas : array
+        array con las fechas de testing.
+    Returns
+    -------
+    mean : dataframe
+        metricas de evaluación.
+    """
+    mean = []
+    for i in range(y_test.shape[1]):
+        print("columna: ", i)
+        predi = predictions[:, i]
+        testi = y_test[:, i]
+        plot_sequence(predi, testi, fechas, i)
+        error = np.abs(predi - testi).mean()
+        suma_pred = predi.sum()
+        suma_test = testi.sum()
+        pt = np.abs(suma_test - suma_pred) / suma_test * 100
+        acc = calculate_accuracy(suma_test, suma_pred)
+        mean.append([i, error, suma_pred, suma_test, pt, acc])
+    mean = pd.DataFrame(mean, columns=["id_columna", "mae", "suma_pred",
+                                       "suma_test", "mape", "acc"])
+    # mean = delete_negatives(mean)
+    # mean = pd.DataFrame(mean, columns=["id_columna", "mae", "suma_pred",
+    #                                    "suma_test", "mape", "acc"])
+    return mean
+
+
+def calculate_accuracy(real, predict):
+    """
+    Calcular accuracy según metodologia de:
+    https://github.com/huseinzol05/Stock-Prediction-Models/blob/master/
+    deep-learning/16.attention-is-all-you-need.ipynb
+    Parameters
+    ----------
+    real : float, array
+        real.
+    predict : float, array
+        predicciones.
+    Returns
+    -------
+    TYPE
+        float, array.
+    """
+    real = np.array(real)
+    predict = np.array(predict)
+    percentage = 1 - np.sqrt(np.mean(np.square((real - predict) / real)))
+    return percentage * 100
+
+
+def plot_instance_training(history, epocas_hacia_atras, model_name,
+                           filename):
+    # Hist training
+    largo = len(history.history['loss'])
+    x_labels = np.arange(largo-epocas_hacia_atras, largo)
+    x_labels = list(x_labels)
+    # Funciones de costo
+    loss_training = history.history['loss'][-epocas_hacia_atras:]
+    loss_validation = history.history['val_loss'][-epocas_hacia_atras:]
+    # Figura
+    fig, ax = plt.subplots(1, figsize=(16, 8))
+    ax.plot(x_labels, loss_training, 'b', linewidth=2)
+    ax.plot(x_labels, loss_validation, 'r', linewidth=2)
+    ax.set_xlabel('Epocas', fontname="Arial", fontsize=14)
+    ax.set_ylabel('Función de costos', fontname="Arial", fontsize=14)
+    ax.set_title(f"{model_name}", fontname="Arial", fontsize=20)
+    ax.legend(['Entrenamiento', 'Validación'], loc='upper left',
+              prop={'size': 14})
+    # Tamaño de los ejes
+    for tick in ax.get_xticklabels():
+        tick.set_fontsize(14)
+    for tick in ax.get_yticklabels():
+        tick.set_fontsize(14)
+    plt.show()
+    # Guardar_resultados del modelo en s3
+    # fig.savefig(f"{model_name}.png")
+    return True
+
+
+def training_history(history, model_name="Celdas LSTM", filename="LSTM"):
+    """
+    Según el historial de entrenamiento que hubo plotear el historial
+    hacía atrás de las variables
+    Parameters
+    ----------
+    history : list
+        lista con errores de validación y training.
+    model_name : string, optional
+        nombre del modelo. The default is "Celdas LSTM".
+    filename : string, optional
+        nombre del archivo. The default is "LSTM".
+
+    Returns
+    -------
+    None.
+
+    """
+    size_training = len(history.history['val_loss'])
+    fig = plot_instance_training(history, size_training, model_name,
+                                 filename + "_ultimas:" +
+                                 str(size_training) + "epocas")
+
+    fig = plot_instance_training(history, int(1.5 * size_training / 2),
+                                 model_name,
+                                 filename + "_ultimas:" +
+                                 str(1.5 * size_training / 2) + "epocas")
+
+    fig = plot_instance_training(history, int(size_training / 2),
+                                 model_name,
+                                 filename + "_ultimas:" + str(
+                                     size_training / 2) + "epocas")
+
+    fig = plot_instance_training(history, int(size_training / 3), model_name,
+                                 filename + "_ultimas:" +
+                                 str(size_training / 3) + "epocas")
+    fig = plot_instance_training(history, int(size_training / 4), model_name,
+                                 filename + "_ultimas:" + str(
+                                     size_training / 4) + "epocas")
+    print(fig)
+
+
+def plot_sequence(predictions, real, fechas, indice):
+    """
+    Plot sequence de la secuecnia
+    Parameters
+    ----------
+    predictions : TYPE
+        DESCRIPTION.
+    real : TYPE
+        DESCRIPTION.
+    fechas : TYPE
+        DESCRIPTION.
+    indice : TYPE
+        DESCRIPTION.
+    Returns
+    -------
+    None.
+
+    """
+    fig, ax = plt.subplots(1, figsize=(20, 12))
+    ax.plot(fechas, real, 'k', linewidth=2)
+    ax.plot(fechas, predictions, 'orange', linewidth=2)
+    ax.set_xlabel('Tiempo', fontname="Arial", fontsize=14)
+    ax.set_ylabel('Predicción vs Real', fontname="Arial", fontsize=14)
+    ax.set_title(f"Predicciones vs real {str(indice)}",
+                 fontname="Arial", fontsize=20)
+    ax.legend(['Entrenamiento', 'Validación'], loc='upper left',
+              prop={'size': 14})
+    # Tamaño de los ejes
+    for tick in ax.get_xticklabels():
+        tick.set_fontsize(14)
+    for tick in ax.get_yticklabels():
+        tick.set_fontsize(14)
+    plt.xticks(rotation=90)
+    plt.show()
