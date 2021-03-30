@@ -168,7 +168,23 @@ Valores criticos:
 	5%: -2.864
 	10%: -2.568
 ```
+# LSTM implementación
 
+Los resultados de las redes lstm fueron bastante buenos en el dataset de moving_avarege, al mismo nivel que deep AR
+De las 19 series de tiempo en 17/19 de las series este precento una mape menor 20 % y la accuracy promedio fue de **86.1 %** 
+hay que seguir trabajando para bajar este error a través del preprocessing, dado que es el hecho que la demanda es muy intermintente
+que hace que las predicciones sobre el conjunto de datos original no sean factibles.
+
+**Resultados buenos**
+![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP30%20PIN_results.png)
+![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP60%20PIN_results.png)
+![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DQ60-S_results.png)
+![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_YPH48_results.png)
+
+**Resultados malos**
+![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP30_results.png)
+
+Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción de como se hace actualmente.
 
 
 #### deep AR resultados:
