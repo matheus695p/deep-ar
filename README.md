@@ -90,6 +90,35 @@ Los scripts utilizados para hacer las pruebas se pueden encontrar en
 
 Los datos manejados son de supply, los que equivalen a la demanda de diferentes articulos en el tiempo de una empresa manufacturera, para probar deep AR se eligen los sku's con mayor cantidad de ventas realizadas en el tiempo, de tal manera de abarcar el 80/20 de la producción. En el caso de manufactura es más complejo el preprocesamiento de las series de tiempo, dado que a diferencia del caso academico de energia, es necesario: (1) Hacer tests estadísticos de estacionaridad, (2) En el caso de que no sean estacionarias, por resultado del test, es necesario aplicar técnicas, para llevarlas a ser estacionarias, con el fin de que los módelos de forecasting, tengan el trabajo más fácil. (3) Entrenar modelos con arquitecturas deep AR (4) finetuning a los módelos.
 
+#### Preprocessing:
+Para el preprocesamiento de los datos, solo se trabajara en esta prueba de conceptos con bases de sku's, existen al rededor de 30.000 sku's diferentes, por lo que se hace imposible realizar modelo para cada sku, además las para ellos se extraen las bases de un sku y con ellas se trabaja.
+
+SKU = METAL # 4.5|11|540|DO|COMPANY|ZP48 ZAMAC
+BASE_SKU = METAL # 4.5
+
+De esta forma se reduce a trabajar solamente con 19 productos, del total de sku's que son las base del 80/20 de la empresa en cuestión.
+formato usado para el ingreso de los datos a deepAR:
+```sh 
+    ─── columnas: bases de sku
+   │   
+   │
+filas: compras
+realizadas de
+esa base de
+sku
+```
+
+#### feature engineering:
+
+¿Cómo manejar los largos períodos sin demanda que no siguen un patrón específico?"
+
+La respuesta esta pregunta es Análisis de demanda intermitente o Análisis de datos dispersos, esto pasa cuando existen "muchos ceros" en relación con el número de no ceros. El problema es que hay dos variables aleatorias, la primerisima es el tiempo entre eventos (a tu elección) y el tamaño esperado del evento. Si vemos gráficos de autocorrelación (acf) del conjunto completo de lecturas no tiene ningún sentido debido a que la secuencia de ceros realza falsamente el acf (no hay ningún patrón).
+Hay un par de enfoques para resolver esto, en primera instancia nos quedaremos con el más fácil (spoiler: última)
+* Podemos seguir el "método de Croston", que es un procedimiento basado en modelos en lugar de un procedimiento basado en datos. El método de Croston es vulnerable a valores atípicos y cambios / tendencias / cambios de nivel en la tasa de demanda, es decir, la demanda dividida por el número de períodos desde la última demanda.
+* Un enfoque mucho más riguroso podría ser buscar "Datos dispersos - Datos desigualmente espaciados" o búsquedas como esa.
+* Una solución bastante ingeniosa y simple es el smothing. Si una serie tiene puntos de tiempo en los que surgen ventas y largos períodos de tiempo en los que no surgen ventas, es posible convertir las ventas en ventas por período dividiendo las ventas observadas por el número de períodos sin ventas obteniendo así una tasa. Entonces es posible identificar un modelo entre la tasa y el intervalo entre las ventas que culminan en una tasa pronosticada y un intervalo pronosticado. Esto de manera más sencilla se transforma en una media movil.
+
+
 #### Estacionaridad:
 
 Hay algunas nociones más detalladas de estacionariedad que puede encontrar si profundiza en este tema. Son:
@@ -139,6 +168,17 @@ Valores criticos:
 	5%: -2.864
 	10%: -2.568
 ```
+
+
+
+#### deep AR resultados:
+
+Después de varías pruebas, se determinó que la frecuencia de predicción sería de 14 días, es decir a partir de la última fecha en train, se predice 14 días al futuro, dos semanas, lo ideal es que se hagan predicciones cada 2 semanas, considerando los datos anteriores.
+
+Acá se muestran un 
+
+
+
 
 
 
