@@ -177,7 +177,7 @@ que hace que las predicciones sobre el conjunto de datos original no sean factib
 
 **Resultados buenos**
 ![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP30%20PIN_results.png)
-![Screenshot](rolling_DP30%20PIN_results.png)
+![Screenshot](./results/lstm/rolling_DP30%20PIN_results.png)
 
 
 ![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP60%20PIN_results.png)
