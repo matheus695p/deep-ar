@@ -176,19 +176,15 @@ hay que seguir trabajando para bajar este error a través del preprocessing, dad
 que hace que las predicciones sobre el conjunto de datos original no sean factibles.
 
 **Resultados buenos**
-![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP30%20PIN_results.png)
 ![Screenshot](./results/lstm/rolling_DP30%20PIN_results.png)
-
-
-![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP60%20PIN_results.png)
-![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DQ60-S_results.png)
-![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_YPH48_results.png)
+![resultados de lstm](./results/lstm/rolling_DP60%20PIN_results.png)
+![resultados de lstm](./results/lstm/rolling_DQ60-S_results.png)
+![resultados de lstm](./results/lstm/rolling_YPH48_results.png)
 
 **Resultados malos**
-![resultados de lstm](https://github.com/matheus695p/deep-ar/blob/master/results/lstm/rolling_DP30_results.png)
+![resultados de lstm](./results/lstm/rolling_DP30_results.png)
 
 Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción de como se hace actualmente.
-
 
 #### deep AR resultados:
 
