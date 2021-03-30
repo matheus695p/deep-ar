@@ -93,8 +93,8 @@ Los datos manejados son de supply, los que equivalen a la demanda de diferentes 
 #### Preprocessing:
 Para el preprocesamiento de los datos, solo se trabajara en esta prueba de conceptos con bases de sku's, existen al rededor de 30.000 sku's diferentes, por lo que se hace imposible realizar modelo para cada sku, además las para ellos se extraen las bases de un sku y con ellas se trabaja.
 
-SKU = METAL # 4.5|11|540|DO|COMPANY|ZP48 ZAMAC
-BASE_SKU = METAL # 4.5
+** SKU = METAL # 4.5|11|540|DO|COMPANY|ZP48 ZAMAC
+** BASE_SKU = METAL # 4.5
 
 De esta forma se reduce a trabajar solamente con 19 productos, del total de sku's que son las base del 80/20 de la empresa en cuestión.
 formato usado para el ingreso de los datos a deepAR:
