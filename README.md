@@ -86,7 +86,7 @@ Los scripts utilizados para hacer las pruebas se pueden encontrar en
 ```
 
 
-### Caso de manufactura:
+# Caso de manufactura:
 
 Los datos manejados son de supply, los que equivalen a la demanda de diferentes articulos en el tiempo de una empresa manufacturera, para probar deep AR se eligen los sku's con mayor cantidad de ventas realizadas en el tiempo, de tal manera de abarcar el 80/20 de la producción. En el caso de manufactura es más complejo el preprocesamiento de las series de tiempo, dado que a diferencia del caso academico de energia, es necesario: (1) Hacer tests estadísticos de estacionaridad, (2) En el caso de que no sean estacionarias, por resultado del test, es necesario aplicar técnicas, para llevarlas a ser estacionarias, con el fin de que los módelos de forecasting, tengan el trabajo más fácil. (3) Entrenar modelos con arquitecturas deep AR (4) finetuning a los módelos.
 
@@ -168,7 +168,7 @@ Valores criticos:
 	5%: -2.864
 	10%: -2.568
 ```
-# LSTM implementación
+#### LSTM implementación
 
 Los resultados de las redes lstm fueron bastante buenos en el dataset de moving_avarege, al mismo nivel que deep AR
 De las 19 series de tiempo en 17/19 de las series este precento una mape menor 20 % y la accuracy promedio fue de **86.1 %** 
@@ -201,6 +201,9 @@ Ejemplos de casos no tan buenos
 ![resultados de lstm](./images/caso_manufactura_rolling_rolling_ZAT48.png)
 
 
+# Caso de electricidad:
+
+Algunos resultados
 
 
 
