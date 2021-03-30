@@ -21,6 +21,9 @@ mpl.rcParams['axes.grid'] = False
 # lectura de los datos en .txt
 df = pd.read_csv('data/LD2011_2014.txt', sep=';', index_col=0,
                  parse_dates=True, decimal=',')
+# copia del dataframe
+data = df.copy()
+data.reset_index(drop=False, inplace=True)
 # explorar el dataset
 head = df.head(5000)
 # ver la serie de tiempo completa
@@ -31,12 +34,15 @@ plot_time_series(df, fecha_inicial="2014-12-01", fecha_final="2014-12-14",
 
 # poner en el formato que requiere gluonts
 df_input = df.reset_index(drop=True).T.reset_index()
-
 # indice de los lugares de consumo electrico
 ts_code = df_input["index"].astype('category').cat.codes.values
 
 # separar los datos
 test_index = int(len(df) * 0.8)
+# fecha de inicio
+start_train = str(data["index"].iloc[0])[0:19]
+start_test = str(data["index"].iloc[test_index])[0:19]
+
 # test_index = 134999
 df_train = df_input.iloc[:, 1:test_index].values
 df_test = df_input.iloc[:, test_index:].values
@@ -55,8 +61,8 @@ prediction_lentgh = int(days_of_prediction * 24 * freq_int)
 number_of_products = 15
 
 # fechas de inicio de los conjuntos
-start_train = pd.Timestamp("2011-01-01 00:15:00", freq=freq)
-start_test = pd.Timestamp("2014-11-07 05:30:00", freq=freq)
+start_train = pd.Timestamp(start_train, freq=freq)
+start_test = pd.Timestamp(start_test, freq=freq)
 
 # settings del modelo, ver link para conocer los hyperparametros
 # https://ts.gluon.ai/api/gluonts/gluonts.model.deepar.html
@@ -65,10 +71,11 @@ estimator = DeepAREstimator(freq=freq,
                             prediction_length=prediction_lentgh,
                             use_feat_static_cat=True,
                             cardinality=[1],
-                            num_layers=4,
-                            num_cells=64,
+                            num_layers=2,
+                            num_cells=128,
                             cell_type='lstm',
-                            trainer=Trainer(epochs=100))
+                            trainer=Trainer(epochs=15))
+
 # reshape de la data de entrenamiento para solo ocupar number_of_products
 train_ds = ListDataset([{
     FieldName.TARGET: target,
@@ -77,6 +84,7 @@ train_ds = ListDataset([{
     for (target, fsc) in zip(df_train[0:number_of_products],
                              ts_code[0:number_of_products].reshape(-1, 1))],
     freq=freq)
+
 # reshape de la data de test para solo ocupar number_of_products
 test_ds = ListDataset([{
     FieldName.TARGET: target,

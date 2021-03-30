@@ -2,7 +2,7 @@ import warnings
 import pandas as pd
 import matplotlib as mpl
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from tqdm.autonotebook import tqdm
 from gluonts.trainer import Trainer
 from gluonts.evaluation import Evaluator
@@ -25,8 +25,15 @@ df = pd.read_csv('data/manufacturing_r30.csv', parse_dates=True)
 fecha_inicial = df["fecha"].iloc[0][0: 10]
 fecha_final = df["fecha"].iloc[-1][0: 10]
 
+# buscar indice de finalizacion
+end_date = datetime.strptime(df["fecha"].iloc[-1],
+                             "%Y-%m-%d %H-%M-%S") - timedelta(days=14)
+end_date = end_date.strftime("%Y-%m-%d %H-%M-%S")
 # separar los datos
-test_index = int(len(df) * 0.8)
+test_index = df[df["fecha"] == end_date].index[0]
+
+# a una freuencia de 15 minutos
+days_of_prediction = len(df) - test_index
 # start_date
 start_date = df["fecha"].iloc[0][0: 10]
 end_date = df["fecha"].iloc[test_index][0: 10]
@@ -51,7 +58,6 @@ df_input = df.reset_index(drop=True).T.reset_index()
 # indice de los lugares de consumo electrico
 ts_code = df_input["index"].astype('category').cat.codes.values
 
-
 # test_index = 134999
 df_train = df_input.iloc[:, 1:test_index].values
 df_test = df_input.iloc[:, test_index:].values
@@ -62,8 +68,7 @@ print("foma de conjunto test", df_test.shape)
 freq = "1440min"
 # frecuencia en horas
 freq_int = 60 / int(''.join(filter(str.isdigit, freq)))
-# a una freuencia de 15 minutos
-days_of_prediction = 7
+
 # largo de la prediccion para que sean days_of_prediction dias
 prediction_lentgh = int(days_of_prediction * 24 * freq_int)
 # número de columnas con el que se harán las predicciones (simil: productos)
@@ -79,10 +84,10 @@ estimator = DeepAREstimator(freq=freq,
                             use_feat_static_cat=True,
                             cardinality=[1],
                             num_layers=4,
-                            dropout_rate=0.3,
-                            num_cells=64,
+                            dropout_rate=0.2,
+                            num_cells=128,
                             cell_type='lstm',
-                            trainer=Trainer(epochs=10))
+                            trainer=Trainer(epochs=100))
 
 # reshape de la data de entrenamiento para solo ocupar number_of_products
 train_ds = ListDataset([{
@@ -95,11 +100,13 @@ train_ds = ListDataset([{
 # reshape de la data de test para solo ocupar number_of_products
 test_ds = ListDataset([{
     FieldName.TARGET: target,
-    FieldName.START: start_test,
+    FieldName.START: end_date,
     FieldName.FEAT_STATIC_CAT: fsc}
     for (target, fsc) in zip(df_test[0:number_of_products],
                              ts_code[0:number_of_products].reshape(-1, 1))],
     freq=freq)
+
+next(iter(train_ds))
 
 # entrenar el predictor
 predictor = estimator.train(training_data=train_ds)
@@ -123,6 +130,7 @@ for i in tqdm(range(number_of_products - 1)):
     plot_prob_forecasts(ts_entry, forecast_entry, prediction_lentgh,
                         prediction_intervals=(80.0, 95.0),
                         problem="caso_manufactura_rolling", color="b")
+
 
 # evaluar para los cuantiles
 evaluator = Evaluator(quantiles=[0.1, 0.5, 0.9])
