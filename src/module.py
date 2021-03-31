@@ -1,11 +1,24 @@
 import os
+import random
 import warnings
+import mxnet as mx
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 from statsmodels.tsa.stattools import adfuller
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+
+def seed_everything():
+    """
+    Reproductibilidad de resultados
+    Returns
+    -------
+    """
+    random.seed(20)
+    np.random.seed(20)
+    mx.random.seed(20)
 
 
 def plot_time_series(df, fecha_inicial="2014-12-01",
