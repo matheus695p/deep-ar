@@ -8,10 +8,9 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 # import plotly.express as px
-# from tqdm import tqdm
+from tqdm import tqdm
 # from pathlib import Path
 from datetime import datetime, timedelta
-from argparse import ArgumentParser
 # from deeprenewal import get_dataset
 from gluonts.trainer import Trainer
 # from gluonts.evaluation import Evaluator
@@ -32,48 +31,14 @@ from gluonts.evaluation.backtest import make_evaluation_predictions
 # from gluonts.distribution.neg_binomial import NegativeBinomialOutput
 # from gluonts.distribution.piecewise_linear import PiecewiseLinearOutput
 from src.module import (index_date, seed_everything)
+from src.config import arguments_parser
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 # semillas
 seed_everything()
 
-# argumentos
-parser = ArgumentParser()
-parser.add_argument(
-    "-f", "--fff", help="a dummy argument to fool ipython", default="1")
-# add donde correr y guardar datos
-parser.add_argument('--use-cuda', type=bool, default=True)
-parser.add_argument('--log-gradients', type=bool, default=True)
-parser.add_argument('--datasource', type=str, default="retail_dataset")
-parser.add_argument('--model-save-dir', type=str, default="saved_models")
-# trainer
-parser.add_argument('--batch_size', type=int, default=32)
-parser.add_argument('--learning-rate', type=float, default=1e-2)
-parser.add_argument('--max-epochs', type=int, default=10)
-parser.add_argument('--number-of-batches-per-epoch', type=int, default=100)
-parser.add_argument('--clip-gradient', type=float, default=5.170127652392614)
-parser.add_argument('--weight-decay', type=float, default=0.01)
-# args modelo
-parser.add_argument('--context-length-multiplier', type=int, default=2)
-parser.add_argument('--num-layers', type=int, default=2)
-parser.add_argument('--num-cells', type=int, default=64)
-parser.add_argument('--cell-type', type=str, default="lstm")
-# p% are dropped and set to zero
-parser.add_argument('--dropout-rate', type=float, default=0.3)
-parser.add_argument('--use-feat-dynamic-real', type=bool, default=False)
-parser.add_argument('--use-feat-static-cat', type=bool, default=False)
-parser.add_argument('--use-feat-static-real', type=bool, default=False)
-parser.add_argument('--scaling', type=bool, default=True)
-parser.add_argument('--num-parallel-samples', type=int, default=100)
-parser.add_argument('--num-lags', type=int, default=1)
-# Only for Deep Renewal Processes
-parser.add_argument('--forecast-type', type=str, default="hybrid")
-
-# Only for Deep AR
-parser.add_argument('--distr-output', type=str,
-                    default="student_t")  # neg_binomial
-args = parser.parse_args()
+# argumentos de entrenamiento
+args = arguments_parser()
 is_gpu = mx.context.num_gpus() > 0
-
 
 # seteo de matplotlib
 mpl.rcParams['figure.figsize'] = (20, 12)
@@ -180,3 +145,25 @@ estimator = DeepRenewalEstimator(
     use_feat_static_real=args.use_feat_static_real,
     trainer=trainer)
 predictor = estimator.train(train_ds)
+
+# Evaluación de los 3 casos
+
+# Deep Renewal Flat
+deep_renewal_flat_forecast_it, ts_it = make_evaluation_predictions(
+    dataset=test_ds, predictor=predictor, num_samples=100)
+deep_renewal_flat_forecasts = list(
+    tqdm(deep_renewal_flat_forecast_it, total=len(test_ds)))
+
+# Deep Renewal Exact
+predictor.forecast_generator.forecast_type = "exact"
+deep_renewal_exact_forecast_it, ts_it = make_evaluation_predictions(
+    dataset=test_ds, predictor=predictor, num_samples=100)
+deep_renewal_exact_forecasts = list(
+    tqdm(deep_renewal_exact_forecast_it, total=len(test_ds)))
+
+# #Deep Renewal Hybrid
+predictor.forecast_generator.forecast_type = "hybrid"
+deep_renewal_hybrid_forecast_it, ts_it = make_evaluation_predictions(
+    dataset=test_ds, predictor=predictor, num_samples=100)
+deep_renewal_hybrid_forecasts = list(
+    tqdm(deep_renewal_hybrid_forecast_it, total=len(test_ds)))
