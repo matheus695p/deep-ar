@@ -2,9 +2,9 @@
 
 # deep AR
 
-Paper deep AR de amazon, implementación a través de gluonts y MX-NET
+Paper deep AR y deep renewal processes for intermitent demand de amazon , implementación a través de gluonts y MX-NET, también se usan redes lstm para hacer baselines del problema.
 
-Esta en desarrollo, este repo ...
+Esta en desarrollo, este repo, quedan partes por implementar ...
 
 
 ### Instalar las librerías necesarias para trabajar con deepAR en gluonts
