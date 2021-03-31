@@ -1,7 +1,7 @@
 # import os
 # import ast
 # import random
-# import joblib
+import joblib
 import warnings
 import mxnet as mx
 import numpy as np
@@ -18,7 +18,7 @@ from gluonts.trainer import Trainer
 from deeprenewal import DeepRenewalEstimator
 # from gluonts.model.npts import NPTSPredictor
 # from gluonts.model.predictor import Predictor
-# from deeprenewal import IntermittentEvaluator
+from deeprenewal import IntermittentEvaluator
 from gluonts.dataset.common import ListDataset
 # from deeprenewal import CrostonForecastPredictor
 # from gluonts.model.deepar import DeepAREstimator
@@ -30,7 +30,8 @@ from gluonts.dataset.field_names import FieldName
 from gluonts.evaluation.backtest import make_evaluation_predictions
 # from gluonts.distribution.neg_binomial import NegativeBinomialOutput
 # from gluonts.distribution.piecewise_linear import PiecewiseLinearOutput
-from src.module import (index_date, seed_everything)
+from src.module import (index_date, seed_everything,
+                        plot_prob_forecasts_deep_renewal)
 from src.config import arguments_parser
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 # semillas
@@ -38,7 +39,12 @@ seed_everything()
 
 # argumentos de entrenamiento
 args = arguments_parser()
+
+# cuda o nopes
 is_gpu = mx.context.num_gpus() > 0
+if is_gpu is False:
+    print("Se va a demorar más que la perraaaaa ..., no joke !!")
+ctx = mx.context.gpu() if is_gpu & args.use_cuda else mx.context.cpu()
 
 # seteo de matplotlib
 mpl.rcParams['figure.figsize'] = (20, 12)
@@ -57,15 +63,15 @@ end_date = datetime.strptime(df["fecha"].iloc[-1],
 end_date = end_date.strftime("%Y-%m-%d %H-%M-%S")
 # separar los datos
 test_index = df[df["fecha"] == end_date].index[0]
-
 # a una freuencia de 15 minutos
 days_of_prediction = len(df) - test_index
+
 # start_date
 start_date = df["fecha"].iloc[0][0: 10]
 end_date = df["fecha"].iloc[test_index][0: 10]
-
 print("Fecha inicial del historial de ventas: ", fecha_inicial)
 print("Fecha final del historial de ventas: ", fecha_final)
+
 # convertir fecha a timestamp
 df["fecha"] = df["fecha"].apply(
     lambda x: datetime.strptime(x, "%Y-%m-%d %H-%M-%S"))
@@ -98,7 +104,6 @@ number_of_products = 19
 start_train = pd.Timestamp(start_date + " 00:00:00", freq=freq)
 start_test = pd.Timestamp(end_date + " 00:00:00", freq=freq)
 
-
 # reshape de la data de entrenamiento para solo ocupar number_of_products
 train_ds = ListDataset([{
     FieldName.TARGET: target,
@@ -115,13 +120,12 @@ test_ds = ListDataset([{
     for (target, fsc) in zip(df_test[0:number_of_products],
                              ts_code[0:number_of_products].reshape(-1, 1))],
     freq=freq)
-
 next(iter(train_ds))
 
 
 # estimador de deep renewal
 trainer = Trainer(
-    ctx=mx.context.gpu() if is_gpu & args.use_cuda else mx.context.cpu(),
+    ctx=ctx,
     batch_size=args.batch_size,
     learning_rate=args.learning_rate,
     epochs=20,
@@ -161,9 +165,74 @@ deep_renewal_exact_forecast_it, ts_it = make_evaluation_predictions(
 deep_renewal_exact_forecasts = list(
     tqdm(deep_renewal_exact_forecast_it, total=len(test_ds)))
 
-# #Deep Renewal Hybrid
+# Deep Renewal Hybrid
 predictor.forecast_generator.forecast_type = "hybrid"
 deep_renewal_hybrid_forecast_it, ts_it = make_evaluation_predictions(
     dataset=test_ds, predictor=predictor, num_samples=100)
 deep_renewal_hybrid_forecasts = list(
     tqdm(deep_renewal_hybrid_forecast_it, total=len(test_ds)))
+
+# conjunto de testing
+tss = list(tqdm(ts_it, total=len(test_ds)))
+# guardar
+joblib.dump({
+    "tss": tss,
+    "deep_renewal_flat": deep_renewal_flat_forecasts,
+    "deep_renewal_exact": deep_renewal_exact_forecasts,
+    "deep_renewal_hybrid": deep_renewal_hybrid_forecasts},
+    "results/forecast_deep_renewal.sav")
+
+# evaluador
+evaluator = IntermittentEvaluator(
+    quantiles=[0.25, 0.5, 0.75], median=True, calculate_spec=False,
+    round_integer=True)
+
+# samplear por cada forecast
+for forecasts in [deep_renewal_flat_forecasts, deep_renewal_exact_forecasts,
+                  deep_renewal_hybrid_forecasts]:
+    for f in forecasts:
+        f.samples = f.samples[:, 0].reshape(-1, 1)
+
+# cargar archivo
+forecast_dict = joblib.load("results/forecast_deep_renewal.sav")
+
+# descomprimir el archivo
+tss = forecast_dict['tss']
+deep_renewal_flat_forecasts = forecast_dict['deep_renewal_flat']
+deep_renewal_exact_forecasts = forecast_dict['deep_renewal_exact']
+deep_renewal_hybrid_forecasts = forecast_dict['deep_renewal_hybrid']
+
+# DeepRenewal Flat
+deep_renewal_flat_agg_metrics, deep_renewal_flat_item_metrics = evaluator(
+    iter(tss), iter(deep_renewal_flat_forecasts), num_series=len(test_ds))
+# Deep Renewal Exact
+deep_renewal_exact_agg_metrics, deep_renewal_exact_item_metrics = evaluator(
+    iter(tss), iter(deep_renewal_exact_forecasts), num_series=len(test_ds))
+# Deep Renewal Hybrid
+deep_renewal_hybrid_agg_metrics, deep_renewal_hybrid_item_metrics =\
+    evaluator(iter(tss), iter(deep_renewal_hybrid_forecasts),
+              num_series=len(test_ds))
+
+# agreagar el nombre del método
+deep_renewal_flat_agg_metrics['method'] = "DeepRenewal Flat"
+deep_renewal_exact_agg_metrics['method'] = "DeepRenewal Exact"
+deep_renewal_hybrid_agg_metrics['method'] = "DeepRenewal Hybrid"
+
+# metricas de salida
+result_df = pd.DataFrame([deep_renewal_flat_agg_metrics,
+                          deep_renewal_exact_agg_metrics,
+                          deep_renewal_hybrid_agg_metrics])
+result_df.to_clipboard(inplace=True)
+restult_df = result_df[['method', 'MSE', 'MAPE', 'MAAPE',
+                        "QuantileLoss[0.25]", "QuantileLoss[0.5]",
+                        "QuantileLoss[0.75]", "mean_wQuantileLoss"]]
+
+# gráfica de los resultados
+forecasts = [deep_renewal_exact_forecasts, deep_renewal_flat_forecasts,
+             deep_renewal_hybrid_forecasts]
+names = ["Deep Renewal Exact",
+         "Deep Renewal Flat", "Deep Renewal Hybrid"]
+for idx in ts_code:
+    print(idx)
+    for forecast, name in zip(forecasts, names):
+        plot_prob_forecasts_deep_renewal(tss[idx], forecast[idx], name)
