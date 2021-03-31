@@ -3,6 +3,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 from statsmodels.tsa.stattools import adfuller
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -593,8 +594,9 @@ def plot_sequence(predictions, real, fechas, indice):
         fecha = fecha[0:10]
         new_fechas.append(fecha)
 
+    plt.style.use('dark_background')
     fig, ax = plt.subplots(1, figsize=(20, 12))
-    ax.plot(new_fechas, real, 'k', linewidth=2)
+    ax.plot(new_fechas, real, 'gold', linewidth=2)
     ax.plot(new_fechas, predictions, 'orangered', linewidth=2)
     ax.set_xlabel('Tiempo', fontname="Arial", fontsize=letter_size)
     ax.set_ylabel('Predicción vs Real', fontname="Arial",
@@ -609,6 +611,42 @@ def plot_sequence(predictions, real, fechas, indice):
     for tick in ax.get_yticklabels():
         tick.set_fontsize(letter_size)
     try_create_folder("results/lstm")
-    fig.savefig(f"results/lstm/{indice}_results.png")
     plt.xticks(rotation=75)
     plt.show()
+    fig.savefig(f"results/lstm/{indice}_results.png")
+
+
+def grouping_df(df, days=10, arg="sum"):
+    """
+    Dado un dataframe que posee una columna de
+
+    Parameters
+    ----------
+    df : dataframe
+        dataframe a agrupar en una fecha dada.
+    days : int, optional
+        dias de la fecha. The default is 10.
+    arg : string, optional
+        sum o mean como argumentos. The default is "sum".
+    Returns
+    -------
+    df : dataframe
+        dataframe agrupado en esos dias.
+    """
+    df["fecha"] = df["fecha"].apply(
+        lambda x: datetime.strptime(x, "%Y-%m-%d %H-%M-%S"))
+    df["fecha_aprox"] = df["fecha"].apply(lambda x: x.round(f"{days}d"))
+    if arg == "sum":
+        print("Se agrupa por suma")
+        df = df.groupby("fecha_aprox").sum()
+    elif arg == "mean":
+        print("Se agrupa por promedio")
+        df = df.groupby("fecha_aprox").mean()
+    else:
+        print("Argumentos no validos, no se ha efectuado la operación")
+    df.reset_index(drop=False, inplace=True)
+    df.rename(columns={"fecha_aprox": "fecha"}, inplace=True)
+    df["fecha"] = df["fecha"].apply(
+        lambda x: x.strftime("%Y-%m-%d %H-%M-%S"))
+    df.reset_index(drop=True, inplace=True)
+    return df

@@ -7,7 +7,7 @@ import matplotlib as mpl
 from datetime import datetime, timedelta
 from src.module import (index_date, always_number, downcast_dtypes,
                         lstm_preparation, delete_negatives, training_history,
-                        lstm_metric_evaluation)
+                        lstm_metric_evaluation, grouping_df)
 from sklearn.preprocessing import MinMaxScaler
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -17,6 +17,9 @@ mpl.rcParams['axes.grid'] = False
 
 # lectura de los datos en .txt
 df = pd.read_csv('data/manufacturing_r30.csv', parse_dates=True)
+# df = pd.read_csv('data/manufacturing.csv', parse_dates=True)
+# agrupar los datos en 10 dias
+# df = grouping_df(df, days=10, arg="sum")
 df.reset_index(drop=True, inplace=True)
 df = always_number(df)
 fecha_inicial = df["fecha"].iloc[0][0: 10]
