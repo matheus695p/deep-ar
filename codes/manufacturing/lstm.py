@@ -7,7 +7,7 @@ import matplotlib as mpl
 from datetime import datetime, timedelta
 from src.module import (index_date, always_number, downcast_dtypes,
                         lstm_preparation, delete_negatives, training_history,
-                        lstm_metric_evaluation, grouping_df)
+                        lstm_metric_evaluation)
 from sklearn.preprocessing import MinMaxScaler
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -126,15 +126,15 @@ lstm.compile(loss='mean_squared_error',
              optimizer=optimizer)
 # llamar callbacks de early stopping
 keras.callbacks.Callback()
-stop_condition = keras.callbacks.EarlyStopping(monitor='val_loss',
-                                               mode='min',
-                                               patience=patience,
-                                               verbose=1,
-                                               min_delta=min_delta,
-                                               restore_best_weights=True)
+stop_condition = tf.keras.callbacks.EarlyStopping(monitor='val_loss',
+                                                  mode='min',
+                                                  patience=patience,
+                                                  verbose=1,
+                                                  min_delta=min_delta,
+                                                  restore_best_weights=True)
 
 # bajar el learning_rate durante la optimización
-learning_rate_schedule = keras.callbacks.ReduceLROnPlateau(
+learning_rate_schedule = tf.keras.callbacks.ReduceLROnPlateau(
     monitor="val_loss",
     factor=lr_factor,
     patience=lr_patience,
