@@ -206,7 +206,7 @@ Ejemplos de casos no tan buenos
 Algunos resultados
 
 
-#### Intermitencia de la demanda:
+# Intermitencia de la demanda:
 
 Llegados a este punto, el caso de manufactura puede ser resuelto siempre y cuando se encuentre una forma de suavizar las curvas de demanda, ya que como vimos en los casos de LSTM, estos solo funcionan cuando se suaviza el problema a través de una media movil, la cual no es posible volver atrás y hacer predicciones. Seamos sinceros. Cualquiera que haya trabajado en problemas de predicción de series temporales en el retail, logística, el e-commerce, etc. definitivamente habría maldecido esa serie que se comporta de manera intermitente y arbitraríá. La temida serie temporal intermitente que dificulta el trabajo de un forescaster. Esta molestia hace que la mayoría de las técnicas de pronóstico estándar sean impracticables, plantea preguntas sobre las métricas (ya que mape no puede ser usado), la selección del modelo (pasando desde una amplia gama), el conjunto de modelos, lo que sea. Y para empeorar las cosas, puede haber casos (como en la industria de las piezas de manufactura, repuestos, donde aparecen patrones intermitentes, artículos de movimiento lento pero muy críticos o de alto valor, casos en minería).
 
@@ -300,18 +300,43 @@ El significado semántico de éxito y fracaso no tiene por qué ser cierto cuand
 
 
 
+## La contribución del paper
+
+El documento solo habla de pronósticos de un paso adelante, que es también lo que encontrará en mucha literatura sobre Pronósticos de demanda intermitente. Pero en un mundo real, necesitaríamos más tiempo para planificar correctamente. Ya sea que se trate de Croston o de un deep renewal process, la forma en que generamos un pronóstico de n pasos adelante es el mismo: un pronóstico plano de tamaño de la demanda (M) / tiempo entre demanda (Q).
+
+
+Hemos introducido dos nuevos métodos para decodificar el output, Exact e Hybrid, además del método Flat existente. Suponga que entrenamos el modelo con una longitud de predicción de 5.
+
+La salida sin procesar del modo sería:
+
+
+![resultados de lstm](./images/methods/image1.png)
+
+
+* **Flat:**
+En la decodificación plana, solo elegiríamos el primer conjunto de salidas (M = 22 y Q = 2) y generaríamos un pronóstico de un paso adelante y extenderíamos el mismo pronóstico para los 5 pasos de tiempo.
+
+* **Exact** 
+La decodificación exacta es una versión más segura de la decodificación. Aquí predecimos una demanda de tamaño de demanda M, cada tiempo entre demanda de Q y hacemos que el resto del pronóstico sea cero.
+
+* **Hibrid**
+En la decodificación híbrida, combinamos estos dos para generar un pronóstico que también tiene en cuenta los cambios a largo plazo en las expectativas del modelo. Usamos el valor M / Q para el pronóstico, pero actualizamos el valor M / Q en función de los siguientes pasos. Por ejemplo, en el ejemplo que tenemos, pronosticaremos 11 (que es 22/3) para los primeros 2 pasos de tiempo, y luego pronosticaremos 33 (que es 33/1) para el siguiente paso de tiempo, etc.
+
+
+![resultados de lstm](./images/methods/image2.png)
 
 
 
+## Implementación
+El algoritomo esta usando GluonTS, que es un marco para el pronóstico de series de tiempo neuronales, construido sobre MXNet. AWS Labs está detrás del proyecto de código abierto y algunos de los algoritmos como DeepAR son utilizados internamente por Amazon para producir estos pronósticos. Nosotros nos colgaremos de la librería deeprenewal para hacer estas predicciones, trayendonos el objeto modelo desde ahí.
 
 
+## Resultados
 
-
-
-
-
-
-
+```sh
+codes/manufacturing/deep_renewal.py  
+```
+![codigo](./codes/manufacturing/deep_renewal.py)
 
 
 
