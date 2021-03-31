@@ -228,22 +228,22 @@ Tradicionalmente, existe una clase de algoritmos que toman un camino ligeramente
 
 Croston propuso aplicar un único suavizado exponencial por separado a M y Q, como se muestra a continuación:
 
-![resultados de lstm](./images/methods/eq1.png)
-![resultados de lstm](./images/methods/eq2.png)
+* ![resultados de lstm](./images/methods/eq1.png)
+* ![resultados de lstm](./images/methods/eq2.png)
 
 Después de obtener estas estimaciones, el pronóstico final:
-![resultados de lstm](./images/methods/eq3.png)
+* ![resultados de lstm](./images/methods/eq3.png)
 Y este es un pronóstico de un paso adelante y si tenemos que extenderlo a varios pasos de tiempo, nos quedamos con un pronóstico plano con el mismo valor.
 
 * **Croston (SBA)**
 Syntetos y Boylan, 2005, mostraron que el pronóstico de Croston estaba sesgado en la demanda intermitente y propuso una corrección con el β de la estimación del intervalo entre demanda.
-![resultados de lstm](./images/methods/eq4.png)
+* ![resultados de lstm](./images/methods/eq4.png)
 
 
 * **Croston (SBJ)**
 Shale, Boylan y Johnston (2006) derivaron el sesgo esperado cuando la llegada sigue un proceso de Poisson.
 
-![resultados de lstm](./images/methods/eq5.png)
+* ![resultados de lstm](./images/methods/eq5.png)
 
 
 * **Pronóstico de Croston como proceso de renovación (renewal processes)**
@@ -253,12 +253,12 @@ El proceso de renovación es un proceso de llegada en el que los intervalos entr
 * **A lo que en el paper deep renewal process**
 Una vez que el pronóstico de Croston fue presentado como un proceso de renovación, Turkmen et al. propuso estimarlos utilizando una red recurrente (RNN) separada para cada “Tamaño de la demanda” e “Intervalo entre demanda”.
 
-![resultados de lstm](./images/methods/eq6.png)
-![resultados de lstm](./images/methods/eq7.png)
+* ![resultados de lstm](./images/methods/eq6.png)
+* ![resultados de lstm](./images/methods/eq7.png)
 
 donde:
 
-![resultados de lstm](./images/methods/eq8.png)
+* ![resultados de lstm](./images/methods/eq8.png)
 
 Esto significa que tenemos una sola RNN, que toma como entrada tanto M como Q y codifica esa información en un encoder (h).
 Y luego se colocan dos capas NN separadas encima de esta capa oculta para estimar la distribución de probabilidad de M y Q.
@@ -272,13 +272,13 @@ Por ejemplo, la cantidad de unidades de un SKU vendidas, la cantidad de personas
 
 La distribución se deriva de una secuencia de ensayos de Bernoulli, que dice que solo hay dos resultados para cada experimento. Un ejemplo clásico es el lanzamiento de una moneda, que puede ser cara o cruz. Entonces, la probabilidad de éxito es p y el fracaso es 1-p (en un lanzamiento de moneda justo, esto es 0.5 cada uno). Entonces, si seguimos realizando este experimento hasta que veamos r éxitos, el número de fallas que veamos tendrá una distribución binomial negativa.
 
-![resultados de lstm](./images/methods/eq9.png)
+* ![resultados de lstm](./images/methods/eq9.png)
 
 El significado semántico de éxito y fracaso no tiene por qué ser cierto cuando aplicamos esto, pero lo que importa es que solo hay dos tipos de resultados.
 
 * **Arquitectura de la red**
 
-![resultados de lstm](./images/methods/deep-renewal.png)
+* ![resultados de lstm](./images/methods/deep-renewal.png)
 
 
 
