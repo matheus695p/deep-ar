@@ -206,6 +206,68 @@ Ejemplos de casos no tan buenos
 Algunos resultados
 
 
+#### Intermitencia de la demanda:
+
+Llegados a este punto, el caso de manufactura puede ser resuelto siempre y cuando se encuentre una forma de suavizar las curvas de demanda, ya que como vimos en los casos de LSTM, estos solo funcionan cuando se suaviza el problema a través de una media movil, la cual no es posible volver atrás y hacer predicciones. Seamos sinceros. Cualquiera que haya trabajado en problemas de predicción de series temporales en el retail, logística, el e-commerce, etc. definitivamente habría maldecido esa serie que se comporta de manera intermitente y arbitraríá. La temida serie temporal intermitente que dificulta el trabajo de un forescaster. Esta molestia hace que la mayoría de las técnicas de pronóstico estándar sean impracticables, plantea preguntas sobre las métricas (ya que mape no puede ser usado), la selección del modelo (pasando desde una amplia gama), el conjunto de modelos, lo que sea. Y para empeorar las cosas, puede haber casos (como en la industria de las piezas de manufactura, repuestos, donde aparecen patrones intermitentes, artículos de movimiento lento pero muy críticos o de alto valor, casos en minería).
+
+* **Notación: **
+* Y - i-ésimo elemento de la serie temporal
+* n - El índice de series temporales 
+* i - El índice de demanda distinta de cero
+* Qi: el intervalo entre demanda, es decir, la brecha entre dos demandas distintas de cero.
+* Mi- El tamaño de la demanda en un punto de demanda distinto de cero.
+
+##### Técnicas clásicas
+
+Tradicionalmente, existe una clase de algoritmos que toman un camino ligeramente diferente para pronosticar las series de tiempo intermitentes. Este conjunto de algoritmos consideró la demanda intermitente en dos partes (tamaño de la demanda e intervalo entre demanda) y los modeló por separado.
+
+* **CROSTON**
+
+Croston propuso aplicar un único suavizado exponencial por separado a M y Q, como se muestra a continuación:
+
+eq1 
+eq2
+
+Después de obtener estas estimaciones, el pronóstico final,
+eq3
+
+Y este es un pronóstico de un paso adelante y si tenemos que extenderlo a varios pasos de tiempo, nos quedamos con un pronóstico plano con el mismo valor.
+
+* **Croston (SBA)**
+Syntetos y Boylan, 2005, mostraron que el pronóstico de Croston estaba sesgado en la demanda intermitente y propuso una corrección con el β de la estimación del intervalo entre demanda.
+eq4
+
+* **Croston (SBJ)**
+Shale, Boylan y Johnston (2006) derivaron el sesgo esperado cuando la llegada sigue un proceso de Poisson.
+eq5
+
+
+* **Pronóstico de Croston como proceso de renovación (renewal processes)**
+
+El proceso de renovación es un proceso de llegada en el que los intervalos entre llegadas son variables aleatorias (RV) positivas, independientes e idénticamente distribuidas (IID). Esta formulación generaliza el proceso de Poison durante largos períodos de tiempo arbitrarios. Por lo general, en un proceso de Poisson, los intervalos entre demanda se distribuyen exponencialmente (suposición fuerte). Pero los procesos de renovación tienen un i.i.d. tiempo entre demanda que tiene una media finita. Turkmen et al. 2019 arroja a Croston y sus variantes en un molde de proceso de renovación. Las variables aleatorias, M y Q, ambas definidas en números enteros positivos definen completamente la Yn (ver más arribita la notación)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
