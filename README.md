@@ -310,7 +310,7 @@ Hemos introducido dos nuevos métodos para decodificar el output, Exact e Hybrid
 La salida sin procesar del modo sería:
 
 
-* ![resultados de lstm](./images/methods/image1.png)
+![resultados de lstm](./images/methods/image1.png)
 
 
 * **Flat:**
@@ -323,7 +323,7 @@ La decodificación exacta es una versión más segura de la decodificación. Aqu
 En la decodificación híbrida, combinamos estos dos para generar un pronóstico que también tiene en cuenta los cambios a largo plazo en las expectativas del modelo. Usamos el valor M / Q para el pronóstico, pero actualizamos el valor M / Q en función de los siguientes pasos. Por ejemplo, en el ejemplo que tenemos, pronosticaremos 11 (que es 22/3) para los primeros 2 pasos de tiempo, y luego pronosticaremos 33 (que es 33/1) para el siguiente paso de tiempo, etc.
 
 
-* ![resultados de lstm](./images/methods/image2.png)
+![resultados de lstm](./images/methods/image2.png)
 
 
 
