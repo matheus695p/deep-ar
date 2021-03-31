@@ -4,6 +4,14 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 def arguments_parser():
+    """
+    El parser de argumentos de parámetros que hay que setiar para entrenar
+    una red deep renewal
+    Returns
+    -------
+    args : argparser
+        argparser con todos los parámetros del modelo.
+    """
     # argumentos
     parser = ArgumentParser()
     parser.add_argument(
