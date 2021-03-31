@@ -210,7 +210,7 @@ Algunos resultados
 
 Llegados a este punto, el caso de manufactura puede ser resuelto siempre y cuando se encuentre una forma de suavizar las curvas de demanda, ya que como vimos en los casos de LSTM, estos solo funcionan cuando se suaviza el problema a través de una media movil, la cual no es posible volver atrás y hacer predicciones. Seamos sinceros. Cualquiera que haya trabajado en problemas de predicción de series temporales en el retail, logística, el e-commerce, etc. definitivamente habría maldecido esa serie que se comporta de manera intermitente y arbitraríá. La temida serie temporal intermitente que dificulta el trabajo de un forescaster. Esta molestia hace que la mayoría de las técnicas de pronóstico estándar sean impracticables, plantea preguntas sobre las métricas (ya que mape no puede ser usado), la selección del modelo (pasando desde una amplia gama), el conjunto de modelos, lo que sea. Y para empeorar las cosas, puede haber casos (como en la industria de las piezas de manufactura, repuestos, donde aparecen patrones intermitentes, artículos de movimiento lento pero muy críticos o de alto valor, casos en minería).
 
-Nos basaremos en lo que se entrega en el paper https://github.com/matheus695p/deep-ar/blob/master/documents/paper intermittent%20demand%20forecasting%20with%20deep%20renewal%20processes.pdf, toda esta revisión bibliográfica viene de los autores Ali Canner, Tim Janushowski, Yuyang Wang y Ali Taylan.
+Nos basaremos en lo que se entrega en el paper [https://github.com/matheus695p/deep-ar/blob/master/documents/paper intermittent%20demand%20forecasting%20with%20deep%20renewal%20processes.pdf], toda esta revisión bibliográfica viene de los autores Ali Canner, Tim Janushowski, Yuyang Wang y Ali Taylan.
 
 
 * **Notación: **
@@ -220,45 +220,60 @@ Nos basaremos en lo que se entrega en el paper https://github.com/matheus695p/de
 * Qi: el intervalo entre demanda, es decir, la brecha entre dos demandas distintas de cero.
 * Mi- El tamaño de la demanda en un punto de demanda distinto de cero.
 
-##### Técnicas clásicas
+# Técnicas clásicas
 
 Tradicionalmente, existe una clase de algoritmos que toman un camino ligeramente diferente para pronosticar las series de tiempo intermitentes. Este conjunto de algoritmos consideró la demanda intermitente en dos partes (tamaño de la demanda e intervalo entre demanda) y los modeló por separado.
 
-* **CROSTON**
+## CROSTON
 
 Croston propuso aplicar un único suavizado exponencial por separado a M y Q, como se muestra a continuación:
+
 
 * ![resultados de lstm](./images/methods/eq1.png)
 * ![resultados de lstm](./images/methods/eq2.png)
 
 Después de obtener estas estimaciones, el pronóstico final:
+
+
 * ![resultados de lstm](./images/methods/eq3.png)
+
+
 Y este es un pronóstico de un paso adelante y si tenemos que extenderlo a varios pasos de tiempo, nos quedamos con un pronóstico plano con el mismo valor.
 
-* **Croston (SBA)**
+## Croston (SBA)
+
 Syntetos y Boylan, 2005, mostraron que el pronóstico de Croston estaba sesgado en la demanda intermitente y propuso una corrección con el β de la estimación del intervalo entre demanda.
+
+
 * ![resultados de lstm](./images/methods/eq4.png)
 
 
-* **Croston (SBJ)**
+## Croston (SBJ)
 Shale, Boylan y Johnston (2006) derivaron el sesgo esperado cuando la llegada sigue un proceso de Poisson.
+
 
 * ![resultados de lstm](./images/methods/eq5.png)
 
 
 * **Pronóstico de Croston como proceso de renovación (renewal processes)**
+
 El proceso de renovación es un proceso de llegada en el que los intervalos entre llegadas son variables aleatorias (RV) positivas, independientes e idénticamente distribuidas (IID). Esta formulación generaliza el proceso de Poison durante largos períodos de tiempo arbitrarios. Por lo general, en un proceso de Poisson, los intervalos entre demanda se distribuyen exponencialmente (suposición fuerte). Pero los procesos de renovación tienen un i.i.d. tiempo entre demanda que tiene una media finita. Turkmen et al. 2019 arroja a Croston y sus variantes en un molde de proceso de renovación. Las variables aleatorias, M y Q, ambas definidas en números enteros positivos definen completamente la Yn (ver más arribita la notación)
 
 
 * **A lo que en el paper deep renewal process**
+
 Una vez que el pronóstico de Croston fue presentado como un proceso de renovación, Turkmen et al. propuso estimarlos utilizando una red recurrente (RNN) separada para cada “Tamaño de la demanda” e “Intervalo entre demanda”.
 
 * ![resultados de lstm](./images/methods/eq6.png)
+
+
 * ![resultados de lstm](./images/methods/eq7.png)
 
 donde:
 
+
 * ![resultados de lstm](./images/methods/eq8.png)
+
 
 Esto significa que tenemos una sola RNN, que toma como entrada tanto M como Q y codifica esa información en un encoder (h).
 Y luego se colocan dos capas NN separadas encima de esta capa oculta para estimar la distribución de probabilidad de M y Q.
@@ -274,9 +289,11 @@ La distribución se deriva de una secuencia de ensayos de Bernoulli, que dice qu
 
 * ![resultados de lstm](./images/methods/eq9.png)
 
+
 El significado semántico de éxito y fracaso no tiene por qué ser cierto cuando aplicamos esto, pero lo que importa es que solo hay dos tipos de resultados.
 
 * **Arquitectura de la red**
+
 
 * ![resultados de lstm](./images/methods/deep-renewal.png)
 
