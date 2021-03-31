@@ -663,3 +663,39 @@ def grouping_df(df, days=10, arg="sum"):
         lambda x: x.strftime("%Y-%m-%d %H-%M-%S"))
     df.reset_index(drop=True, inplace=True)
     return df
+
+
+def plot_prob_forecasts_deep_renewal(ts_entry, forecast_entry, title):
+    """
+    Plot del conjunto de testeo con intervalos de confianza definidos
+
+    Parameters
+    ----------
+    ts_entry : dataframe
+        dataframe con fecha y cantidad consumida.
+    forecast_entry : TYPE
+        DESCRIPTION.
+    prediction_lentgh : TYPE
+        DESCRIPTION.
+    prediction_intervals : TYPE, optional
+        DESCRIPTION. The default is (80.0, 95.0).
+
+    Returns
+    -------
+    None.
+
+    """
+    plot_length = 100
+    prediction_intervals = (50.0, 90.0)
+    legend = ["observations", "median prediction"] + \
+        [f"{k}% prediction interval" for k in prediction_intervals][::-1]
+    title =\
+        title if forecast_entry.item_id is None else title +\
+        "|"+forecast_entry.item_id
+    fig, ax = plt.subplots(1, 1, figsize=(10, 7))
+    ts_entry[-plot_length:].plot(ax=ax)  # plot the time series
+    forecast_entry.plot(prediction_intervals=prediction_intervals, color='g')
+    plt.grid(which="both")
+    plt.legend(legend, loc="upper left")
+    plt.title(title)
+    plt.show()
