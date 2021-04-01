@@ -226,12 +226,19 @@ Los resultados son buenismos, acá la distribución de error esperada del conjun
 
 
 ##### Histograma de resultados
-![resultados de lstm](./results/lstm/error_modelos_lstm_hist.png)
+
+
+<p align="center">
+  <img src="./results/lstm/error_modelos_lstm_hist.png">
+</p>
 
 
 
 ##### Distribución de resultados
-![resultados de lstm](./results/lstm/error_modelos_lstm_hist.png)
+
+<p align="center">
+  <img src="./results/lstm/error_rolling_distribución.png">
+</p>
 
 
 Muy buenas predicciones !!!
