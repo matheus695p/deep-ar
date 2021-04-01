@@ -91,7 +91,7 @@ Los scripts utilizados para hacer las pruebas se pueden encontrar en
 
 Los datos manejados son de supply, los que equivalen a la demanda de diferentes articulos en el tiempo de una empresa manufacturera, para probar deep AR se eligen los sku's con mayor cantidad de ventas realizadas en el tiempo, de tal manera de abarcar el 80/20 de la producción. En el caso de manufactura es más complejo el preprocesamiento de las series de tiempo, dado que a diferencia del caso academico de energia, es necesario: (1) Hacer tests estadísticos de estacionaridad, (2) En el caso de que no sean estacionarias, por resultado del test, es necesario aplicar técnicas, para llevarlas a ser estacionarias, con el fin de que los módelos de forecasting, tengan el trabajo más fácil. (3) Entrenar modelos con arquitecturas deep AR (4) finetuning a los módelos.
 
-#### Preprocessing:
+## Preprocessing:
 Para el preprocesamiento de los datos, solo se trabajara en esta prueba de conceptos con bases de sku's, existen al rededor de 30.000 sku's diferentes, por lo que se hace imposible realizar modelo para cada sku, además las para ellos se extraen las bases de un sku y con ellas se trabaja.
 
 * SKU = **METAL # 4.5**|11|540|DO|COMPANY|ZP48 ZAMAC
@@ -109,7 +109,7 @@ esa base de
 sku
 ```
 
-#### feature engineering:
+## feature engineering:
 
 ¿Cómo manejar los largos períodos sin demanda que no siguen un patrón específico?"
 
@@ -120,7 +120,7 @@ Hay un par de enfoques para resolver esto, en primera instancia nos quedaremos c
 * Una solución bastante ingeniosa y simple es el smothing. Si una serie tiene puntos de tiempo en los que surgen ventas y largos períodos de tiempo en los que no surgen ventas, es posible convertir las ventas en ventas por período dividiendo las ventas observadas por el número de períodos sin ventas obteniendo así una tasa. Entonces es posible identificar un modelo entre la tasa y el intervalo entre las ventas que culminan en una tasa pronosticada y un intervalo pronosticado. Esto de manera más sencilla se transforma en una media movil.
 
 
-#### Estacionaridad:
+## Estacionaridad:
 
 Hay algunas nociones más detalladas de estacionariedad que puede encontrar si profundiza en este tema. Son:
 Son:
@@ -169,7 +169,7 @@ Valores criticos:
 	5%: -2.864
 	10%: -2.568
 ```
-#### LSTM implementación
+## LSTM implementación
 
 Los resultados de las redes lstm fueron bastante buenos en el dataset de moving_avarege, al mismo nivel que deep AR
 De las 19 series de tiempo en 16/19 de las series tuvieron un mape (mean porcentage error) menor 30 % y la accuracy promedio fue de **77.16 %** de todos los modelos juntos.
@@ -229,7 +229,7 @@ Acá dejo un link a la tabla con los resultados de cada uno de estos modelos.
 Los resultados son buenismos, acá la distribución de error esperada del conjunto de series de tiempo.
 
 
-##### Histograma de resultados
+### Histograma de resultados
 
 
 <p align="center">
@@ -238,7 +238,7 @@ Los resultados son buenismos, acá la distribución de error esperada del conjun
 
 
 
-##### Distribución de resultados
+### Distribución de resultados
 
 <p align="center">
   <img src="./results/lstm/error_rolling_distribución.png">
