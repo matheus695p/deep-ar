@@ -136,7 +136,7 @@ y_test = sc.inverse_transform(y_test)
 predictions = delete_negatives(predictions)
 # matriz de evaluación de la serie de tiempo en el dataset rolling
 evaluation = lstm_metric_evaluation(
-    predictions, y_test, fechas, names, save=False)
+    predictions, y_test, fechas, names, save=True)
 
 # gráficas de salida de la evaluación de los modelos
 sns_plot = sns.displot(evaluation, x="acc", binwidth=1)
