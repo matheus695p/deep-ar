@@ -1,3 +1,6 @@
 pandas==1.0.5
 mxnet==1.6
 gluonts
+pytorchts==0.3.1
+tensorflow-gpu==2.4.0
+
