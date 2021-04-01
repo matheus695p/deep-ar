@@ -171,22 +171,45 @@ Valores criticos:
 #### LSTM implementación
 
 Los resultados de las redes lstm fueron bastante buenos en el dataset de moving_avarege, al mismo nivel que deep AR
-De las 19 series de tiempo en 17/19 de las series este precento una mape menor 20 % y la accuracy promedio fue de **86.1 %** 
-hay que seguir trabajando para bajar este error a través del preprocessing, dado que es el hecho que la demanda es muy intermintente
-que hace que las predicciones sobre el conjunto de datos original no sean factibles.
+De las 19 series de tiempo en 16/19 de las series tuvieron un mape (mean porcentage error) menor 30 % y la accuracy promedio fue de **77.16 %** de todos los modelos juntos.
 
-**Resultados buenos**
+Este es un excelente resultado excelente sabiendo la dificultad que existe en la predicción con series de tiempo que son intermitentes
+
+
+**Resultados**
+Los resultados se pueden encontrar en la carpeta:
+
+
+```sh
+results/lstm/*.png
+```
+
+Algunos resultados:
+
+
 ![Screenshot](./results/lstm/rolling_DP30%20PIN_results.png)
 ![resultados de lstm](./results/lstm/rolling_DP60%20PIN_results.png)
 ![resultados de lstm](./results/lstm/rolling_DQ60-S_results.png)
 ![resultados de lstm](./results/lstm/rolling_YPH48_results.png)
 
-**Resultados malos**
-![resultados de lstm](./results/lstm/rolling_DP30_results.png)
+
+Los resultados anteriores, corresponden a las predicciones sobre un dataset tratado a través de medías móviles, esto no nos dice nada a simple vista, solo que somos capaces de predecir cual será la media movil futura. Es por eso que sobre estos resultados, es necesario hacer una transformación para determinar la demanda en un punto i del tiempo.
+
+
+Usamos la siguiente técnica de descompresión:
+
+
+
+
+
+
+
 
 Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción de como se hace actualmente.
 
 #### deep AR resultados:
+
+De el modelamiento anterior surge la necesidad de encontrar la distribución de probabilidad de la demanda durante los dias de la predicción, y es en este punto donde entran los modelos probabilisticos como deep AR. Dado que este punto, se ha construido un modelo muy preciso en saber cual sera la demanda en un periodo de tiempo, pero no como va a ocurrir en ese periodo, y es en este punto en donde entra esta solución.
 
 Después de varías pruebas, se determinó que la frecuencia de predicción sería de 14 días, es decir a partir de la última fecha en train, se predice 14 días al futuro, dos semanas, lo ideal es que se hagan predicciones cada 2 semanas, considerando los datos anteriores.
 
