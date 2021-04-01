@@ -187,14 +187,14 @@ results/lstm/*.png
 Algunos resultados:
 
 
-![Screenshot](./results/lstm/rolling_SP40%TU_results.png)
-![resultados de lstm](./results/lstm/rolling_DP60%20PIN_results.png)
-![resultados de lstm](./results/lstm/rolling_ZAPT44_results.png)
-![resultados de lstm](./results/lstm/rolling_SP40%TU_results.png)
-![resultados de lstm](./results/lstm/rolling_MP60_results.png)
+![resultados de lstm](./results/lstm/rolling_DP30PIN.png)
+![resultados de lstm](./results/lstm/rolling_DP60PIN.png)
+![resultados de lstm](./results/lstm/rolling_DQ60.png)
+![resultados de lstm](./results/lstm/rolling_DQ60_S.png)
+![resultados de lstm](./results/lstm/rolling_IP41LLAVELAGRIMA.png)
+![resultados de lstm](./results/lstm/rolling_MP60.png)
 
-
-Los resultados anteriores, corresponden a las predicciones sobre un dataset tratado a través de medías móviles, esto no nos dice nada a simple vista, solo que somos capaces de predecir cual será la media movil futura. Es por eso que sobre estos resultados, es necesario hacer una transformación para determinar la demanda en un punto i del tiempo.
+Los resultados anteriores, corresponden a las predicciones sobre un dataset tratado a través de medias móviles, esto no nos dice nada a simple vista, solo que somos capaces de predecir cual será la media movil futura. Es por eso que sobre estos resultados, es necesario hacer una transformación para determinar la demanda en un punto i del tiempo.
 
 
 Usamos la siguiente técnica de descompresión:
