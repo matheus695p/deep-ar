@@ -151,6 +151,7 @@ demand_predictions = get_demand_prediction(predictions, demand_real, fechas,
 # resultados de esta descompresión de la demanda a través de la media movil
 results = evaluate_demand_predictions(demand_predictions, demand_real,
                                       fechas, args)
+results.to_csv("results/lstm/modelos.csv", index=False)
 # transformaciones para poder hacer el plot
 results = results[results["accuracy"] != "No determinado"]
 results.reset_index(drop=True, inplace=True)
