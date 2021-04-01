@@ -140,9 +140,9 @@ evaluation = lstm_metric_evaluation(
 
 # gráficas de salida de la evaluación de los modelos
 sns_plot = sns.displot(evaluation, x="acc", binwidth=1)
-sns_plot.savefig("results/error_rolling_hist.png")
+sns_plot.savefig("results/lstm/error_rolling_hist.png")
 sns_plot = sns.displot(evaluation, x="acc", kind="kde")
-sns_plot.savefig("results/error_rolling_distribución.png")
+sns_plot.savefig("results/lstm/error_rolling_distribución.png")
 
 # evaluación de la lstm en el dataset de demandas
 demand_predictions = get_demand_prediction(predictions, demand_real, fechas,
@@ -160,6 +160,6 @@ results["mape"] = results["mape"].apply(float)
 
 # plot de los resultados globales en la predición de la demanda
 sns_plot = sns.displot(results, x="accuracy", binwidth=1)
-sns_plot.savefig("results/error_modelos_lstm_hist.png")
+sns_plot.savefig("results/lstm/error_modelos_lstm_hist.png")
 sns_plot = sns.displot(results, x="accuracy", kind="kde")
-sns_plot.savefig("results/error_modelos_distribución.png")
+sns_plot.savefig("results/lstm/error_modelos_distribución.png")
