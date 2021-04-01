@@ -461,7 +461,8 @@ codes/manufacturing/deep_renewal.py
 ```
 ![codigo](./codes/manufacturing/deep_renewal.py)
 
-La conchalevale, jodí en el uso de la gpu, gluonts no tiene incorporado cudann11, que es lo que ocupa la rtx 3080
+La conchalevale, jodí en el uso de la gpu, gluonts no tiene incorporado cudann11, que es lo que ocupa la gpu que ocupo, se demorá infinito si no tienes GPU.
+
 
 
 
