@@ -207,26 +207,50 @@ Donde:
 * mmi: Es la media movil del periodo (acá se hizó con 30 días)
 * demanda i: Es la demanda en el punto i (acá se hizó con 30 días)
 * sumatoria de la demanda hasta el día antes: Es la demanda en el punto i (acá se hizó con 30 días)
+* En cada punto i, se debe escoger el máximo entre la demandai y 0, de modo de seguir con la distribución propuesta por la predicción de la red
 
 
 Entonces, al ser capaces de predecir la medía movil del primer día, al conocer la demanda de los últimos 29, podemos saber cual es la demanda en el punto i, del mismo modo ahora para el caso de i + 1, en donde ahora es conocida la demanda i, que viene dada por la predicción de la media movil.
 
 De esta forma, podemos descomprimir los resultados de predicciones de medias moviles futuras, en demandas en puntos especificos del tiempo.
 
-Al hacer esto, tenemos cual sería la predicción de la demanda en el tiempo.
+Al hacer esto, tenemos cual sería la predicción de la demanda en el tiempo, dado el modelo general.
 
 
 Acá dejo un link a la tabla con los resultados de cada uno de estos modelos.
 
 
-![./results/lstm/rolling_MP60.png](./results/lstm/modelos.csv)
+![Resultados de los modelos](./results/lstm/modelos.csv)
+
+Los resultados son buenismos, acá la distribución de error esperada del conjunto de series de tiempo.
 
 
+**Histograma de resultados**
+![resultados de lstm](./results/lstm/error_modelos_lstm_hist.png)
 
 
+**Distribución de resultados**
+![resultados de lstm](./results/lstm/error_modelos_lstm_hist.png)
 
-Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción y ser un aporte al .
 
+Muy buenas predicciones !!!
+
+### Arquitectura de la red
+
+Visualización hecha a través de netron/ re buen visualizador de arquitecturas, recomendado !!!
+https://github.com/lutzroeder/netron
+
+
+### Comentarios de los resultados de la LSTM
+
+**¿Como avanzamos?**
+Para un periodo de 45 días, fuimos capaces de predecir de manera super exacta cual sería el total de la demanda (cuantos articulos iban a producir de tal tipo), el problema es que el método de decompresión usado, sesga los periodos en lo que se realiza la demanda, dado que va escogiendo el máximo entre la demandai y 0, por lo tanto es super improbable acertar a los días exactos en el que se realizó la demanda. Sin embargo de manera global se hace muy bien, que es lo más importante. 
+
+
+Finalmente conseguimos una accurracy promedio del 83 %, con la mediana en 85 %, lo que es super elevado, sabiendo que un solo modelo maneja 19 bases de SKU. La distribución mostrada anteriormente es reflejo de esto.
+
+
+Para poder avanzar más en estos resultados, necesitamos ir a buscar esta distribución de la demanda en un periodo T de tiempo, es ahí donde se introduce el paper de amazon deep autoregressive models.
 
 
 # Deep AR resultados:
@@ -246,12 +270,8 @@ Ejemplos de casos no tan buenos
 ![resultados de lstm](./images/caso_manufactura_rolling_rolling_ZAT48.png)
 
 
-# Caso de electricidad:
 
-Algunos resultados
-
-
-# Intermitencia de la demanda:
+## Intermitencia de la demanda:
 
 Llegados a este punto, el caso de manufactura puede ser resuelto siempre y cuando se encuentre una forma de suavizar las curvas de demanda, ya que como vimos en los casos de LSTM, estos solo funcionan cuando se suaviza el problema a través de una media movil, la cual no es posible volver atrás y hacer predicciones. Seamos sinceros. Cualquiera que haya trabajado en problemas de predicción de series temporales en el retail, logística, el e-commerce, etc. definitivamente habría maldecido esa serie que se comporta de manera intermitente y arbitraríá. La temida serie temporal intermitente que dificulta el trabajo de un forescaster. Esta molestia hace que la mayoría de las técnicas de pronóstico estándar sean impracticables, plantea preguntas sobre las métricas (ya que mape no puede ser usado), la selección del modelo (pasando desde una amplia gama), el conjunto de modelos, lo que sea. Y para empeorar las cosas, puede haber casos (como en la industria de las piezas de manufactura, repuestos, donde aparecen patrones intermitentes, artículos de movimiento lento pero muy críticos o de alto valor, casos en minería).
 
@@ -266,11 +286,11 @@ Ali Taylan.
 * Qi: el intervalo entre demanda, es decir, la brecha entre dos demandas distintas de cero.
 * Mi- El tamaño de la demanda en un punto de demanda distinto de cero.
 
-# Técnicas clásicas
+## Técnicas clásicas
 
 Tradicionalmente, existe una clase de algoritmos que toman un camino ligeramente diferente para pronosticar las series de tiempo intermitentes. Este conjunto de algoritmos consideró la demanda intermitente en dos partes (tamaño de la demanda e intervalo entre demanda) y los modeló por separado.
 
-## CROSTON
+### CROSTON
 
 Croston propuso aplicar un único suavizado exponencial por separado a M y Q, como se muestra a continuación:
 
@@ -286,7 +306,7 @@ Después de obtener estas estimaciones, el pronóstico final:
 
 Y este es un pronóstico de un paso adelante y si tenemos que extenderlo a varios pasos de tiempo, nos quedamos con un pronóstico plano con el mismo valor.
 
-## Croston (SBA)
+### Croston (SBA)
 
 Syntetos y Boylan, 2005, mostraron que el pronóstico de Croston estaba sesgado en la demanda intermitente y propuso una corrección con el β de la estimación del intervalo entre demanda.
 
@@ -294,19 +314,19 @@ Syntetos y Boylan, 2005, mostraron que el pronóstico de Croston estaba sesgado 
 * ![resultados de lstm](./images/methods/eq4.png)
 
 
-## Croston (SBJ)
+### Croston (SBJ)
 Shale, Boylan y Johnston (2006) derivaron el sesgo esperado cuando la llegada sigue un proceso de Poisson.
 
 
 * ![resultados de lstm](./images/methods/eq5.png)
 
 
-## Pronóstico de Croston como proceso de renovación (renewal processes)
+### Pronóstico de Croston como proceso de renovación (renewal processes)
 
 El proceso de renovación es un proceso de llegada en el que los intervalos entre llegadas son variables aleatorias (RV) positivas, independientes e idénticamente distribuidas (IID). Esta formulación generaliza el proceso de Poison durante largos períodos de tiempo arbitrarios. Por lo general, en un proceso de Poisson, los intervalos entre demanda se distribuyen exponencialmente (suposición fuerte). Pero los procesos de renovación tienen un i.i.d. tiempo entre demanda que tiene una media finita. Turkmen et al. 2019 arroja a Croston y sus variantes en un molde de proceso de renovación. Las variables aleatorias, M y Q, ambas definidas en números enteros positivos definen completamente la Yn (ver más arribita la notación)
 
 
-## A lo que en el paper deep renewal process
+### A lo que en el paper deep renewal process
 
 Una vez que el pronóstico de Croston fue presentado como un proceso de renovación, Turkmen et al. propuso estimarlos utilizando una red recurrente (RNN) separada para cada “Tamaño de la demanda” e “Intervalo entre demanda”.
 
@@ -326,7 +346,7 @@ Y luego se colocan dos capas NN separadas encima de esta capa oculta para estima
 Tanto para M como para Q, la distribución binomial negativa es la opción sugerida por el artículo, dada esta intermitencia en la demanda.
 
 
-## Distribución binomial negativa
+### Distribución binomial negativa
 
 La distribución binomial negativa es una distribución de probabilidad discreta que se utiliza comúnmente para modelar datos de recuento.
 Por ejemplo, la cantidad de unidades de un SKU vendidas, la cantidad de personas que visitaron un sitio web o la cantidad de llamadas de servicio que recibe un centro de llamadas, llegadas a una estación de servicio de combustible, etc.
@@ -338,14 +358,14 @@ La distribución se deriva de una secuencia de ensayos de Bernoulli, que dice qu
 
 El significado semántico de éxito y fracaso no tiene por qué ser cierto cuando aplicamos esto, pero lo que importa es que solo hay dos tipos de resultados.
 
-## Arquitectura de la red
+### Arquitectura de una red deep renewal
 
 
 * ![resultados de lstm](./images/methods/deep-renewal.png)
 
 
 
-## La contribución del paper
+### La contribución del paper
 
 El documento solo habla de pronósticos de un paso adelante, que es también lo que encontrará en mucha literatura sobre Pronósticos de demanda intermitente. Pero en un mundo real, necesitaríamos más tiempo para planificar correctamente. Ya sea que se trate de Croston o de un deep renewal process, la forma en que generamos un pronóstico de n pasos adelante es el mismo: un pronóstico plano de tamaño de la demanda (M) / tiempo entre demanda (Q).
 
@@ -372,7 +392,7 @@ En la decodificación híbrida, combinamos estos dos para generar un pronóstico
 
 
 
-## Implementación
+### Implementación
 El algoritomo esta usando GluonTS, que es un marco para el pronóstico de series de tiempo neuronales, construido sobre MXNet. AWS Labs está detrás del proyecto de código abierto y algunos de los algoritmos como DeepAR son utilizados internamente por Amazon para producir estos pronósticos. Nosotros nos colgaremos de la librería deeprenewal para hacer estas predicciones, trayendonos el objeto modelo desde ahí.
 
 
@@ -383,7 +403,7 @@ codes/manufacturing/deep_renewal.py
 ```
 ![codigo](./codes/manufacturing/deep_renewal.py)
 
-
+La conchalevale, jodí en el uso de la gpu, gluonts no tiene incorporado cudann11, que es lo que ocupa la rtx 3080
 
 
 
