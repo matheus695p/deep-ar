@@ -480,8 +480,8 @@ def lstm_metric_evaluation(predictions, y_test, fechas, filter_names,
 def calculate_accuracy(real, predict):
     """
     Calcular accuracy según metodologia de:
-    https://github.com/huseinzol05/Stock-Prediction-Models/blob/master/
-    deep-learning/16.attention-is-all-you-need.ipynb
+    [https://github.com/huseinzol05/Stock-Prediction-Models/blob/master/
+    deep-learning/16.attention-is-all-you-need.ipynb]
     Parameters
     ----------
     real : float, array
