@@ -632,6 +632,10 @@ def plot_sequence(predictions, real, fechas, indice, save):
     try_create_folder("results/lstm")
     plt.xticks(rotation=75)
     plt.show()
+    path = f"results/lstm/{indice}.png"
+    path = path.replace(" ", "").replace("-", "_")
+    print("Nombre: ", path)
+
     if save:
         fig.savefig(f"results/lstm/{indice}_results.png")
 
