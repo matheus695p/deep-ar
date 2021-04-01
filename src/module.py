@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from statsmodels.tsa.stattools import adfuller
 warnings.filterwarnings("ignore")
+plt.style.use('dark_background')
 
 
 def seed_everything():
