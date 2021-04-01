@@ -57,4 +57,4 @@ result.reset_index(drop=True, inplace=True)
 
 # guardar la data de manufactura
 result.to_csv("data/manufacturing.csv", index=False,
-              date_format='%Y-%m-%d %H-%M-%S')
+              date_format='%Y-%m-%d %H:%M:%S')
