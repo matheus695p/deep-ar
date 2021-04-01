@@ -632,12 +632,14 @@ def plot_sequence(predictions, real, fechas, indice, save):
     try_create_folder("results/lstm")
     plt.xticks(rotation=75)
     plt.show()
+
     path = f"results/lstm/{indice}.png"
     path = path.replace(" ", "").replace("-", "_")
     print("Nombre: ", path)
+    print("Indice: ", indice)
 
     if save:
-        fig.savefig(f"results/lstm/{indice}_results.png")
+        fig.savefig(path)
 
 
 def grouping_df(df, days=10, arg="sum"):
