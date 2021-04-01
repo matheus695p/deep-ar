@@ -310,13 +310,19 @@ Croston propuso aplicar un único suavizado exponencial por separado a M y Q, co
   <img src="./images/methods/eq1.png">
 </p>
 
-* ![resultados de lstm](./images/methods/eq1.png)
-* ![resultados de lstm](./images/methods/eq2.png)
+
+<p align="center">
+  <img src="./images/methods/eq2.png">
+</p>
+
 
 Después de obtener estas estimaciones, el pronóstico final:
 
 
-* ![resultados de lstm](./images/methods/eq3.png)
+<p align="center">
+  <img src="./images/methods/eq3.png">
+</p>
+
 
 
 Y este es un pronóstico de un paso adelante y si tenemos que extenderlo a varios pasos de tiempo, nos quedamos con un pronóstico plano con el mismo valor.
@@ -326,14 +332,19 @@ Y este es un pronóstico de un paso adelante y si tenemos que extenderlo a vario
 Syntetos y Boylan, 2005, mostraron que el pronóstico de Croston estaba sesgado en la demanda intermitente y propuso una corrección con el β de la estimación del intervalo entre demanda.
 
 
-* ![resultados de lstm](./images/methods/eq4.png)
+<p align="center">
+  <img src="./images/methods/eq4.png">
+</p>
 
 
 ### Croston (SBJ)
 Shale, Boylan y Johnston (2006) derivaron el sesgo esperado cuando la llegada sigue un proceso de Poisson.
 
 
-* ![resultados de lstm](./images/methods/eq5.png)
+<p align="center">
+  <img src="./images/methods/eq5.png">
+</p>
+
 
 
 ### Pronóstico de Croston como proceso de renovación (renewal processes)
@@ -345,15 +356,24 @@ El proceso de renovación es un proceso de llegada en el que los intervalos entr
 
 Una vez que el pronóstico de Croston fue presentado como un proceso de renovación, Turkmen et al. propuso estimarlos utilizando una red recurrente (RNN) separada para cada “Tamaño de la demanda” e “Intervalo entre demanda”.
 
-* ![resultados de lstm](./images/methods/eq6.png)
+
+<p align="center">
+  <img src="./images/methods/eq6.png">
+</p>
 
 
-* ![resultados de lstm](./images/methods/eq7.png)
+<p align="center">
+  <img src="./images/methods/eq7.png">
+</p>
+
 
 donde:
 
 
-* ![resultados de lstm](./images/methods/eq8.png)
+<p align="center">
+  <img src="./images/methods/eq8.png">
+</p>
+
 
 
 Esto significa que tenemos una sola RNN, que toma como entrada tanto M como Q y codifica esa información en un encoder (h).
@@ -368,7 +388,11 @@ Por ejemplo, la cantidad de unidades de un SKU vendidas, la cantidad de personas
 
 La distribución se deriva de una secuencia de ensayos de Bernoulli, que dice que solo hay dos resultados para cada experimento. Un ejemplo clásico es el lanzamiento de una moneda, que puede ser cara o cruz. Entonces, la probabilidad de éxito es p y el fracaso es 1-p (en un lanzamiento de moneda justo, esto es 0.5 cada uno). Entonces, si seguimos realizando este experimento hasta que veamos r éxitos, el número de fallas que veamos tendrá una distribución binomial negativa.
 
-* ![resultados de lstm](./images/methods/eq9.png)
+
+<p align="center">
+  <img src="./images/methods/eq9.png">
+</p>
+
 
 
 El significado semántico de éxito y fracaso no tiene por qué ser cierto cuando aplicamos esto, pero lo que importa es que solo hay dos tipos de resultados.
@@ -376,7 +400,9 @@ El significado semántico de éxito y fracaso no tiene por qué ser cierto cuand
 ### Arquitectura de una red deep renewal
 
 
-* ![resultados de lstm](./images/methods/deep-renewal.png)
+<p align="center">
+  <img src="./images/methods/deep-renewal.png">
+</p>
 
 
 
@@ -390,7 +416,9 @@ Hemos introducido dos nuevos métodos para decodificar el output, Exact e Hybrid
 La salida sin procesar del modo sería:
 
 
-![resultados de lstm](./images/methods/image1.png)
+<p align="center">
+  <img src="./images/methods/image1.png">
+</p>
 
 
 * **Flat:**
@@ -403,7 +431,9 @@ La decodificación exacta es una versión más segura de la decodificación. Aqu
 En la decodificación híbrida, combinamos estos dos para generar un pronóstico que también tiene en cuenta los cambios a largo plazo en las expectativas del modelo. Usamos el valor M / Q para el pronóstico, pero actualizamos el valor M / Q en función de los siguientes pasos. Por ejemplo, en el ejemplo que tenemos, pronosticaremos 11 (que es 22/3) para los primeros 2 pasos de tiempo, y luego pronosticaremos 33 (que es 33/1) para el siguiente paso de tiempo, etc.
 
 
-![resultados de lstm](./images/methods/image2.png)
+<p align="center">
+  <img src="./images/methods/image2.png">
+</p>
 
 
 
