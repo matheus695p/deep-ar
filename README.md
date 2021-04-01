@@ -197,12 +197,9 @@ Algunos resultados:
 Los resultados anteriores, corresponden a las predicciones sobre un dataset tratado a través de medias móviles, esto no nos dice nada a simple vista, solo que somos capaces de predecir cual será la media movil futura. Es por eso que sobre estos resultados, es necesario hacer una transformación para determinar la demanda en un punto i del tiempo.
 
 
-Usamos la siguiente técnica de descompresión:
+Usamos la siguiente técnica de descompresión ver ecuación:
 
-
-
-
-
+![formula de decompresion](./results/lstm/decompresion.png)
 
 
 
