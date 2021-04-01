@@ -306,6 +306,9 @@ Tradicionalmente, existe una clase de algoritmos que toman un camino ligeramente
 
 Croston propuso aplicar un único suavizado exponencial por separado a M y Q, como se muestra a continuación:
 
+<p align="center">
+  <img width="460" height="300" src="./images/methods/eq1.png">
+</p>
 
 * ![resultados de lstm](./images/methods/eq1.png)
 * ![resultados de lstm](./images/methods/eq2.png)
