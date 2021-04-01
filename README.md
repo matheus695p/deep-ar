@@ -268,8 +268,11 @@ Visualización hecha a través de netron/ re buen visualizador de arquitecturas,
 
 ### Comentarios de los resultados de la LSTM
 
+
 **¿Como avanzamos?**
-Para un periodo de 45 días, fuimos capaces de predecir de manera super exacta cual sería el total de la demanda (cuantos articulos iban a producir de tal tipo), el problema es que el método de decompresión usado, sesga los periodos en lo que se realiza la demanda, dado que va escogiendo el máximo entre la demandai y 0, por lo tanto es super improbable acertar a los días exactos en el que se realizó la demanda. Sin embargo de manera global se hace muy bien, que es lo más importante. 
+
+
+Para un periodo de 45 días, se es capaz de predecir de manera precisa cual sería el total de la demanda en un periodo T de tiempo (cuantos articulos iban a requerir de tal tipo), el problema es que el método de decompresión usado, sesga los subperiodos (díás) en lo que se hace efectiva esta demanda de producción, dado que va escogiendo el máximo entre la demanda del día i y 0, por lo tanto es super improbable acertar a los días exactos en el que se realizó la demanda (intermitencia en los datos). Sin embargo de manera global (en un periodo T) se hace bien, que es lo que le interesa al cliente. 
 
 
 Finalmente conseguimos una accurracy promedio del 83 %, con la mediana en 85 %, lo que es super elevado, sabiendo que un solo modelo maneja 19 bases de SKU. La distribución mostrada anteriormente es reflejo de esto.
