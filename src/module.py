@@ -5,9 +5,9 @@ import warnings
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime
+from datetime import datetime, timedelta
 from statsmodels.tsa.stattools import adfuller
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore")
 
 
 def seed_everything():
@@ -433,7 +433,8 @@ def delete_negatives(predictions):
     return predictions
 
 
-def lstm_metric_evaluation(predictions, y_test, fechas, filter_names):
+def lstm_metric_evaluation(predictions, y_test, fechas, filter_names,
+                           save=False):
     """
     Evaluar la suma de la demanda predecida para el ciclo, con la suma de
     la demanda real en el ciclo de test
@@ -447,6 +448,9 @@ def lstm_metric_evaluation(predictions, y_test, fechas, filter_names):
         array con las fechas de testing.
     filter names : array
         array con los nombres de los articulos.
+    save : boolean, optional
+        Decide si se guardan o no las images de los resultados.
+        The default is False.
     Returns
     -------
     mean : dataframe
@@ -457,7 +461,7 @@ def lstm_metric_evaluation(predictions, y_test, fechas, filter_names):
         print("columna: ", i)
         predi = predictions[:, i]
         testi = y_test[:, i]
-        plot_sequence(predi, testi, fechas, filter_names[i])
+        plot_sequence(predi, testi, fechas, filter_names[i], save)
         error = np.abs(predi - testi).mean()
         suma_pred = predi.sum()
         suma_test = testi.sum()
@@ -584,7 +588,7 @@ def training_history(history, model_name="Celdas LSTM", filename="LSTM"):
     print(fig)
 
 
-def plot_sequence(predictions, real, fechas, indice):
+def plot_sequence(predictions, real, fechas, indice, save):
     """
     Plot sequence de la secuecnia
     Parameters
@@ -595,8 +599,10 @@ def plot_sequence(predictions, real, fechas, indice):
         valores reales.
     fechas : array
         array de fechas.
-    indice : TYPE
-        indice de la columna.
+    indice : string
+        indice de la columna o nombre.
+    save : boolean
+        guarda o no guarda el archivo.
     Returns
     -------
     plot de prediciones vs real.
@@ -626,7 +632,8 @@ def plot_sequence(predictions, real, fechas, indice):
     try_create_folder("results/lstm")
     plt.xticks(rotation=75)
     plt.show()
-    fig.savefig(f"results/lstm/{indice}_results.png")
+    if save:
+        fig.savefig(f"results/lstm/{indice}_results.png")
 
 
 def grouping_df(df, days=10, arg="sum"):
@@ -699,3 +706,153 @@ def plot_prob_forecasts_deep_renewal(ts_entry, forecast_entry, title):
     plt.legend(legend, loc="upper left")
     plt.title(title)
     plt.show()
+
+
+def get_demand_prediction(array, demand, fechas, names, rolling_window,
+                          args):
+    """
+    Hacer transformaciones para hacer predicciones sobre la demanda real
+    no la ventana deslizante.
+
+    Parameters
+    ----------
+    array : array de prediciones
+        DESCRIPTION.
+    original : dataframe
+        dataframe de datos originales de la demanda.
+    fechas : list
+        fechas donde se hace el testing.
+    names : list
+        nombres de las columnas.
+    rolling_window: int
+        largo de la ventana deslizante movil
+    rolling_window: args-parser
+        argumentos de setting del proyecto
+    Returns
+    -------
+    Metricas de resultado en función de la demanda
+    """
+    # valores de default para probar
+    # array = predictions.copy()
+    # demand = demand_real.copy()
+
+    # ventana deslizante resultados
+    rolling = pd.DataFrame(array, columns=names)
+    rolling["fecha"] = pd.Series(fechas)
+    rolling["fecha"] = rolling["fecha"].apply(
+        lambda x: datetime.strptime(x, args.date_format))
+
+    # formato fecha
+    demand["fecha"] = demand["fecha"].apply(
+        lambda x: datetime.strptime(x, args.date_format))
+    # filtrar los datos necesarios para el filtrado de la ventana temporal
+    fecha_inicial = rolling["fecha"].min() - timedelta(days=rolling_window)
+    demand = demand[demand["fecha"] >= fecha_inicial]
+    demand.reset_index(drop=True, inplace=True)
+    # columnas a iterar
+    columns = list(rolling.columns)
+    columns.remove("fecha")
+    # descomprimir demanda
+    for rolling_col in columns:
+        original_col = rolling_col.replace("rolling_", "")
+        print(original_col)
+        rollingi = rolling[[rolling_col]].to_numpy()
+        for i in range(rolling_window, demand.shape[0]):
+            # recalcular el vector de demanda nuevamente
+            demandi = demand[[original_col]].to_numpy()
+            # sacar la media movil predicha
+            mean_rolling = rollingi[i-rolling_window][0]
+            # calcula la suma acumulada que se deberia tener
+            suma_rolling1 = demandi[i-rolling_window: i-1].sum()
+            # calcula la demanda estimada
+            predict_demandi = mean_rolling * rolling_window - suma_rolling1
+            # en el caso de ser negativa la setea a cero
+            predict_demandi = max(predict_demandi, 0)
+            # cambia el valor en el dataframe
+            demand[original_col].iloc[i] = predict_demandi
+    # filtra para que queden solo las predicciones hechas
+    demand = demand[demand["fecha"] >= rolling["fecha"].min()]
+    demand.reset_index(drop=True, inplace=True)
+    return demand
+
+
+def mape_computation(real, predict):
+    """
+    Mean porcentage error computation
+    Parameters
+    ----------
+    real : float
+        valor real.
+    predict : float
+        valor de la prediccion.
+    Returns
+    -------
+    mape : float
+        mean percentage error.
+    """
+    error = np.abs(real - predict)
+    mape = error / real * 100
+    return mape
+
+
+def evaluate_demand_predictions(demand_predictions, demand_real, fechas,
+                                args):
+    """
+    Evaluar la predicción de la demanda
+
+    Parameters
+    ----------
+    demand_predictions : dataframe
+        dataframe con las predicciones de demanda descomprimida
+    demand_real : dataframe
+        demanda real del articulo
+    fechas : list
+        fechas de evaluacion.
+    args : arg-parser
+        parametros.
+    Returns
+    -------
+    output : dataframe
+        resultados.
+    """
+    # fechas en las que se esta haciendo las predicciones
+    df_fechas = pd.DataFrame(fechas, columns=["fecha"])
+    df_fechas["fecha"] = df_fechas["fecha"].apply(
+        lambda x: datetime.strptime(x, args.date_format))
+    # formato fecha
+    demand_real["fecha"] = demand_real["fecha"].apply(str)
+    demand_real["fecha"] = demand_real["fecha"].apply(
+        lambda x: datetime.strptime(x, args.date_format))
+    # filtrar en las fechas utilizadas solamente
+    demand_real = demand_real[demand_real["fecha"]
+                              >= df_fechas["fecha"].min()]
+    demand_real.reset_index(drop=True, inplace=True)
+    # columnas a iterar
+    columns = list(demand_real.columns)
+    columns.remove("fecha")
+    output = []
+    # iterar sobre estas columnas
+    for col in columns:
+        # print("Calculando accuracy:", col, "...")
+        reali = demand_real[col].sum()
+        preidictionsi = demand_predictions[col].sum()
+        if reali > 0:
+            acc = calculate_accuracy(reali, preidictionsi)
+            mape = mape_computation(reali, preidictionsi)
+            # print(mape, 100-mape, acc)
+        else:
+            acc = -1
+            mape = -1
+        output.append([col, mape, acc])
+    output = pd.DataFrame(output, columns=["columna", "mape", "accuracy"])
+    output.reset_index(drop=True, inplace=True)
+
+    promedio_error = output[output["mape"] > 0]["mape"].mean()
+    promedio_acc = output[output["mape"] > 0]["accuracy"].mean()
+    print("Error promedio de los modelos", promedio_error)
+    print("Accuracy promedio de los modelos", promedio_acc)
+    output["mape"] = output["mape"].apply(
+        lambda x: "No determinado" if x == -1 else x)
+    output["accuracy"] = output["accuracy"].apply(
+        lambda x: "No determinado" if x == -1 else x)
+    return output

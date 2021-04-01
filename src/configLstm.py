@@ -28,5 +28,7 @@ def arguments_parser():
     parser.add_argument('--lr_patience', type=int, default=25)
     parser.add_argument('--lr_min', type=float, default=1e-3)
     parser.add_argument('--validation_size', type=float, default=0.2)
+    parser.add_argument('--date_format', type=str,
+                        default="%Y-%m-%d %H:%M:%S")
     args = parser.parse_args()
     return args
