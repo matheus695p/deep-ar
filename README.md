@@ -225,20 +225,32 @@ Acá dejo un link a la tabla con los resultados de cada uno de estos modelos.
 Los resultados son buenismos, acá la distribución de error esperada del conjunto de series de tiempo.
 
 
-**Histograma de resultados**
+##### Histograma de resultados
 ![resultados de lstm](./results/lstm/error_modelos_lstm_hist.png)
 
 
-**Distribución de resultados**
+
+##### Distribución de resultados
 ![resultados de lstm](./results/lstm/error_modelos_lstm_hist.png)
 
 
 Muy buenas predicciones !!!
 
+
 ### Arquitectura de la red
 
+La es una LSTM con 512 neuronas LSTM en la primera capa, mas 256 neuronas Dense en la segunda capa, la capa de salida es del tamaño de la cantidad de Bases de SKU que se hicieron. La regularización de la red se hizo con dropout a tasa de 0.2.
+
+
 Visualización hecha a través de netron/ re buen visualizador de arquitecturas, recomendado !!!
-https://github.com/lutzroeder/netron
+
+
+* https://github.com/lutzroeder/netron
+
+
+
+![resultados de lstm](./results/lstm/arquitectura.png)
+
 
 
 ### Comentarios de los resultados de la LSTM
