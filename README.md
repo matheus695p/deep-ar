@@ -187,10 +187,11 @@ results/lstm/*.png
 Algunos resultados:
 
 
-![Screenshot](./results/lstm/rolling_DP30%20PIN_results.png)
-![resultados de lstm](./results/lstm/rolling_DP60%20PIN_results.png)
-![resultados de lstm](./results/lstm/rolling_DQ60-S_results.png)
-![resultados de lstm](./results/lstm/rolling_YPH48_results.png)
+![Screenshot](./results/lstm/rolling_SP40 TU_results.png)
+![resultados de lstm](./results/lstm/rolling_DP60 20PIN_results.png)
+![resultados de lstm](./results/lstm/rolling_ZAPT44_results.png)
+![resultados de lstm](./results/lstm/rolling_SP40 TU_results.png)
+![resultados de lstm](./results/lstm/rolling_MP60_results.png)
 
 
 Los resultados anteriores, corresponden a las predicciones sobre un dataset tratado a través de medías móviles, esto no nos dice nada a simple vista, solo que somos capaces de predecir cual será la media movil futura. Es por eso que sobre estos resultados, es necesario hacer una transformación para determinar la demanda en un punto i del tiempo.
@@ -205,9 +206,11 @@ Usamos la siguiente técnica de descompresión:
 
 
 
-Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción de como se hace actualmente.
+Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción y ser un aporte al .
 
-#### deep AR resultados:
+
+
+# Deep AR resultados:
 
 De el modelamiento anterior surge la necesidad de encontrar la distribución de probabilidad de la demanda durante los dias de la predicción, y es en este punto donde entran los modelos probabilisticos como deep AR. Dado que este punto, se ha construido un modelo muy preciso en saber cual sera la demanda en un periodo de tiempo, pero no como va a ocurrir en ese periodo, y es en este punto en donde entra esta solución.
 
