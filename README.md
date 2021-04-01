@@ -202,6 +202,28 @@ Usamos la siguiente técnica de descompresión ver ecuación:
 ![formula de decompresion](./results/lstm/decompresion.png)
 
 
+Donde:
+
+* mmi: Es la media movil del periodo (acá se hizó con 30 días)
+* demanda i: Es la demanda en el punto i (acá se hizó con 30 días)
+* sumatoria de la demanda hasta el día antes: Es la demanda en el punto i (acá se hizó con 30 días)
+
+
+Entonces, al ser capaces de predecir la medía movil del primer día, al conocer la demanda de los últimos 29, podemos saber cual es la demanda en el punto i, del mismo modo ahora para el caso de i + 1, en donde ahora es conocida la demanda i, que viene dada por la predicción de la media movil.
+
+De esta forma, podemos descomprimir los resultados de predicciones de medias moviles futuras, en demandas en puntos especificos del tiempo.
+
+Al hacer esto, tenemos cual sería la predicción de la demanda en el tiempo.
+
+
+Acá dejo un link a la tabla con los resultados de cada uno de estos modelos.
+
+
+![resultados de modelos](./results/lstm/modelos.csv)
+
+
+
+
 
 Estos resultados de lleno permiten hacer una mucho mejor planificación de la producción y ser un aporte al .
 
