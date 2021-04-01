@@ -263,6 +263,8 @@ Visualización hecha a través de netron/ re buen visualizador de arquitecturas,
 ![resultados de lstm](./results/lstm/arquitectura.png)
 
 
+![codigo a la red](./codes/manufacturing/lstm.py)
+
 
 ### Comentarios de los resultados de la LSTM
 
