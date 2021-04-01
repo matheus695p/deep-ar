@@ -163,3 +163,7 @@ sns_plot = sns.displot(results, x="accuracy", binwidth=1)
 sns_plot.savefig("results/lstm/error_modelos_lstm_hist.png")
 sns_plot = sns.displot(results, x="accuracy", kind="kde")
 sns_plot.savefig("results/lstm/error_modelos_distribución.png")
+
+
+# guardar el modelo entrenado
+lstm.save('results/lstm/LSTM.h5')
