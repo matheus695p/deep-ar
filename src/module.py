@@ -1,7 +1,7 @@
 import os
 import random
 import warnings
-import mxnet as mx
+# import mxnet as mx
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,7 +18,7 @@ def seed_everything():
     """
     random.seed(20)
     np.random.seed(20)
-    mx.random.seed(20)
+    # mx.random.seed(20)
 
 
 def plot_time_series(df, fecha_inicial="2014-12-01",
