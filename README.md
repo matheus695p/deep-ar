@@ -200,7 +200,10 @@ Los resultados anteriores, corresponden a las predicciones sobre un dataset trat
 
 Usamos la siguiente técnica de descompresión ver ecuación:
 
-![formula de decompresion](./results/lstm/decompresion.png)
+
+<p align="center">
+  <img src="./results/lstm/decompresion.png">
+</p>
 
 
 Donde:
