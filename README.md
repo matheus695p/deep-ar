@@ -219,7 +219,7 @@ Al hacer esto, tenemos cual sería la predicción de la demanda en el tiempo.
 Acá dejo un link a la tabla con los resultados de cada uno de estos modelos.
 
 
-![resultados de modelos](./results/lstm/modelos.csv)
+![./results/lstm/rolling_MP60.png](./results/lstm/modelos.csv)
 
 
 
