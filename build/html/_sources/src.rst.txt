@@ -1,0 +1,37 @@
+Intermittent Demand Library
+===========
+
+Submodules
+----------
+
+src.config
+-----------------
+
+.. automodule:: src.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.configLstm
+---------------------
+
+.. automodule:: src.configLstm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.module
+-----------------
+
+.. automodule:: src.module
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src
+   :members:
+   :undoc-members:
+   :show-inheritance:
