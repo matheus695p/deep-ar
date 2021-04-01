@@ -187,10 +187,10 @@ results/lstm/*.png
 Algunos resultados:
 
 
-![Screenshot](./results/lstm/rolling_SP40 TU_results.png)
-![resultados de lstm](./results/lstm/rolling_DP60 20PIN_results.png)
+![Screenshot](./results/lstm/rolling_SP40%TU_results.png)
+![resultados de lstm](./results/lstm/rolling_DP60%20PIN_results.png)
 ![resultados de lstm](./results/lstm/rolling_ZAPT44_results.png)
-![resultados de lstm](./results/lstm/rolling_SP40 TU_results.png)
+![resultados de lstm](./results/lstm/rolling_SP40%TU_results.png)
 ![resultados de lstm](./results/lstm/rolling_MP60_results.png)
 
 
