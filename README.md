@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
-# deep AR
+# Analysis of intermittent time series
+
 
 Paper deep AR y deep renewal processes for intermitent demand de amazon , implementación a través de gluonts y MX-NET, también se usan redes lstm para hacer baselines del problema.
 
