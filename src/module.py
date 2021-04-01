@@ -707,7 +707,7 @@ def plot_prob_forecasts_deep_renewal(ts_entry, forecast_entry, title):
         title if forecast_entry.item_id is None else title +\
         "|"+forecast_entry.item_id
     fig, ax = plt.subplots(1, 1, figsize=(10, 7))
-    ts_entry[-plot_length:].plot(ax=ax)  # plot the time series
+    ts_entry[-plot_length:].plot(ax=ax)
     forecast_entry.plot(prediction_intervals=prediction_intervals, color='g')
     plt.grid(which="both")
     plt.legend(legend, loc="upper left")
