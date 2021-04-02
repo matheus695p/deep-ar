@@ -7,6 +7,14 @@ Paper deep AR y deep renewal processes for intermitent demand de amazon , implem
 
 Esta en desarrollo, este repo, quedan partes por implementar ...
 
+### Documentación
+
+Documentación de los modulos con sphinx 
+
+```sh
+build/html/index.html
+```
+
 
 ### Instalar las librerías necesarias para trabajar con deepAR en gluonts
 ```sh
