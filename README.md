@@ -473,7 +473,7 @@ codes/manufacturing/deep_renewal.py
 ```
 ![codigo](./codes/manufacturing/deep_renewal.py)
 
-Fallé en el uso de GPU, gluonts no tiene incorporado cudann11, que es lo que ocupa la gpu que ocupo, se demorá infinito si no tienes GPU, voy intentar probarlo por SageMaker, pero puede tener costo, se demorá infinito solo en CPU.
+Fallé en el uso de GPU, gluonts no tiene incorporado cudann11, que es lo que ocupa la gpu que ocupo, se demorá mucho si no tienes GPU, voy intentar probarlo por SageMaker, pero puede tener costo, se demorá infinito solo en CPU.
 
 
 
