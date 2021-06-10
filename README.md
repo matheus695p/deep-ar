@@ -475,7 +475,8 @@ codes/manufacturing/deep_renewal.py
 
 Fallé en el uso de GPU, gluonts no tiene incorporado cudann11, que es lo que ocupa la gpu que ocupo, se demorá mucho si no tienes GPU, voy intentar probarlo por SageMaker, pero puede tener costo, se demorá infinito solo en CPU.
 
-
+El issue sigue abierto:
+* https://github.com/deepinsight/insightface/issues/1213
 
 
 
