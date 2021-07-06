@@ -254,7 +254,7 @@ Los resultados son buenismos, acá la distribución de error esperada del conjun
 </p>
 
 
-Muy buenas predicciones !!!
+Buenas predicciones, para ser baseline del problema !!!
 
 
 ### Arquitectura de la red
